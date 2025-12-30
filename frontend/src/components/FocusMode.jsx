@@ -1,8 +1,42 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { Target, Plus, X } from 'lucide-react';
+import { Target, Plus, X, Clock } from 'lucide-react';
 import './FocusMode.css';
 import API_URL from "../config/api";
+
+// Popular sites mapping (name -> domain)
+const POPULAR_SITES = {
+  'YouTube': 'youtube.com',
+  'Facebook': 'facebook.com',
+  'Instagram': 'instagram.com',
+  'Twitter': 'twitter.com',
+  'TikTok': 'tiktok.com',
+  'Reddit': 'reddit.com',
+  'Netflix': 'netflix.com',
+  'Twitch': 'twitch.tv',
+  'Discord': 'discord.com',
+  'LinkedIn': 'linkedin.com',
+  'Pinterest': 'pinterest.com',
+  'Snapchat': 'snapchat.com',
+  'WhatsApp': 'web.whatsapp.com',
+  'Telegram': 'telegram.org',
+  'Amazon': 'amazon.com',
+  'eBay': 'ebay.com',
+  'Spotify': 'spotify.com',
+  'SoundCloud': 'soundcloud.com',
+  'Hacker News': 'news.ycombinator.com',
+  'Medium': 'medium.com',
+  'Quora': 'quora.com',
+  'Stack Overflow': 'stackoverflow.com',
+  'GitHub': 'github.com',
+  'Gmail': 'mail.google.com',
+  'Outlook': 'outlook.com'
+};
+
+// Reverse mapping (domain -> name)
+const DOMAIN_TO_NAME = Object.fromEntries(
+  Object.entries(POPULAR_SITES).map(([name, domain]) => [domain, name])
+);
 
 function FocusMode({ userId }) {
   const [duration, setDuration] = useState(25);
@@ -10,9 +44,13 @@ function FocusMode({ userId }) {
   const [newSite, setNewSite] = useState('');
   const [activeSession, setActiveSession] = useState(null);
   const [timeRemaining, setTimeRemaining] = useState(0);
+  const [recommendations, setRecommendations] = useState([]);
+  const [suggestions, setSuggestions] = useState([]);
+  const [showSuggestions, setShowSuggestions] = useState(false);
 
   useEffect(() => {
     checkActiveSession();
+    loadRecommendations();
   }, [userId]);
 
   useEffect(() => {
@@ -43,10 +81,80 @@ function FocusMode({ userId }) {
     }
   };
 
+  const loadRecommendations = async () => {
+    try {
+      const res = await axios.get(`${API_URL}/focus/stats/${userId}`);
+      if (res.data.topBlockedSites && res.data.topBlockedSites.length > 0) {
+        // Get top 5 previously blocked sites
+        const topSites = res.data.topBlockedSites.slice(0, 5).map(site => site.domain);
+        setRecommendations(topSites);
+      }
+    } catch (error) {
+      console.error('Error loading recommendations:', error);
+    }
+  };
+
+  const getSiteName = (domain) => {
+    return DOMAIN_TO_NAME[domain] || domain.split('.')[0].charAt(0).toUpperCase() + domain.split('.')[0].slice(1);
+  };
+
+  const handleInputChange = (value) => {
+    setNewSite(value);
+
+    if (value.length > 0) {
+      // Search in popular sites
+      const matches = Object.entries(POPULAR_SITES)
+        .filter(([name, domain]) =>
+          name.toLowerCase().includes(value.toLowerCase()) ||
+          domain.toLowerCase().includes(value.toLowerCase())
+        )
+        .slice(0, 5);
+
+      setSuggestions(matches);
+      setShowSuggestions(true);
+    } else {
+      setSuggestions([]);
+      setShowSuggestions(false);
+    }
+  };
+
+  const selectSuggestion = (domain) => {
+    if (!blockedSites.includes(domain)) {
+      setBlockedSites([...blockedSites, domain]);
+    }
+    setNewSite('');
+    setSuggestions([]);
+    setShowSuggestions(false);
+  };
+
   const addSite = () => {
-    if (newSite && !blockedSites.includes(newSite)) {
-      setBlockedSites([...blockedSites, newSite]);
+    if (!newSite) return;
+
+    let domain = newSite.trim().toLowerCase();
+
+    // Check if it's a site name (e.g., "YouTube")
+    const matchedDomain = POPULAR_SITES[newSite.trim()];
+    if (matchedDomain) {
+      domain = matchedDomain;
+    }
+    // If it doesn't have a TLD, try to match it
+    else if (!domain.includes('.')) {
+      const match = Object.entries(POPULAR_SITES).find(([name]) =>
+        name.toLowerCase() === domain
+      );
+      if (match) {
+        domain = match[1];
+      } else {
+        // Assume .com
+        domain = domain + '.com';
+      }
+    }
+
+    if (!blockedSites.includes(domain)) {
+      setBlockedSites([...blockedSites, domain]);
       setNewSite('');
+      setSuggestions([]);
+      setShowSuggestions(false);
     }
   };
 
@@ -126,14 +234,55 @@ function FocusMode({ userId }) {
 
             <div className="blocked-sites-section">
               <label>Websites to Block</label>
+
+              {/* Recommendations from previous sessions */}
+              {recommendations.length > 0 && blockedSites.length === 0 && (
+                <div className="recommendations">
+                  <div className="recommendations-header">
+                    <Clock size={16} />
+                    <span>Previously blocked:</span>
+                  </div>
+                  <div className="recommendation-chips">
+                    {recommendations.map(domain => (
+                      <button
+                        key={domain}
+                        onClick={() => selectSuggestion(domain)}
+                        className="recommendation-chip"
+                      >
+                        <Plus size={14} />
+                        {getSiteName(domain)}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
+
               <div className="add-site">
-                <input
-                  type="text"
-                  value={newSite}
-                  onChange={(e) => setNewSite(e.target.value)}
-                  onKeyPress={(e) => e.key === 'Enter' && addSite()}
-                  placeholder="e.g., youtube.com"
-                />
+                <div className="input-wrapper">
+                  <input
+                    type="text"
+                    value={newSite}
+                    onChange={(e) => handleInputChange(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && addSite()}
+                    onFocus={() => newSite && setShowSuggestions(true)}
+                    onBlur={() => setTimeout(() => setShowSuggestions(false), 200)}
+                    placeholder="e.g., YouTube or youtube.com"
+                  />
+                  {showSuggestions && suggestions.length > 0 && (
+                    <div className="suggestions-dropdown">
+                      {suggestions.map(([name, domain]) => (
+                        <div
+                          key={domain}
+                          className="suggestion-item"
+                          onClick={() => selectSuggestion(domain)}
+                        >
+                          <span className="suggestion-name">{name}</span>
+                          <span className="suggestion-domain">{domain}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
                 <button onClick={addSite} className="btn-add">
                   <Plus size={20} />
                 </button>
@@ -142,7 +291,10 @@ function FocusMode({ userId }) {
               <div className="sites-list">
                 {blockedSites.map(site => (
                   <div key={site} className="site-tag">
-                    <span>{site}</span>
+                    <div className="site-info">
+                      <span className="site-name">{getSiteName(site)}</span>
+                      <span className="site-domain">{site}</span>
+                    </div>
                     <button onClick={() => removeSite(site)}>
                       <X size={16} />
                     </button>
