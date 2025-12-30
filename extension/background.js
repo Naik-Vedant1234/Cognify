@@ -228,14 +228,34 @@ function isValidDomain(domain) {
 
 async function checkAndBlock(tabId, url) {
   try {
+    if (!userId) {
+      console.log('No userId available for blocking check');
+      return;
+    }
+
     const domain = new URL(url).hostname;
+    console.log(`Checking if ${domain} should be blocked for user ${userId}`);
 
     const focusCheck = await fetch(`${API_URL}/focus/check/${userId}/${domain}`)
-      .then((r) => r.json())
-      .catch(() => ({ blocked: false }));
+      .then((r) => {
+        if (!r.ok) {
+          console.error(`API returned status ${r.status}`);
+          return { blocked: false };
+        }
+        return r.json();
+      })
+      .catch((err) => {
+        console.error('Focus check API error:', err);
+        return { blocked: false };
+      });
+
+    console.log(`Block check result for ${domain}:`, focusCheck);
 
     if (focusCheck.blocked) {
+      console.log(`🚫 BLOCKING ${domain}`);
       blockTab(tabId, domain);
+    } else {
+      console.log(`✅ ${domain} is not blocked`);
     }
   } catch (err) {
     console.error("checkAndBlock error:", err);
@@ -243,8 +263,15 @@ async function checkAndBlock(tabId, url) {
 }
 
 function blockTab(tabId, domain) {
+  console.log(`🔒 Redirecting tab ${tabId} to blocked page for ${domain}`);
   const blockedPageUrl = chrome.runtime.getURL(
     `blocked.html?url=${encodeURIComponent(domain)}`
   );
-  chrome.tabs.update(tabId, { url: blockedPageUrl });
+  chrome.tabs.update(tabId, { url: blockedPageUrl }, () => {
+    if (chrome.runtime.lastError) {
+      console.error('Error blocking tab:', chrome.runtime.lastError);
+    } else {
+      console.log(`✅ Successfully blocked ${domain}`);
+    }
+  });
 }
