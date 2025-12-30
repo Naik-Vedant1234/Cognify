@@ -4,6 +4,7 @@ import Dashboard from './components/Dashboard';
 import FocusMode from './components/FocusMode';
 import FloatingChatbot from './components/FloatingChatbot';
 import { Clock, Target } from 'lucide-react';
+import API_URL from './config/api';
 import './App.css';
 
 function App() {
@@ -72,8 +73,6 @@ function App() {
 
 function BlockedPage() {
   const [timeRemaining, setTimeRemaining] = React.useState('');
-  import API_URL from './config/api';
-
   const [userId] = React.useState(() => localStorage.getItem('cognify_user_id'));
 
   React.useEffect(() => {
