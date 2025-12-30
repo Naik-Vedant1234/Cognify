@@ -448,3 +448,131 @@
     grid-template-columns: 1fr;
   }
 }
+
+/* Recent Focus Sessions */
+.recent-sessions-section {
+  margin-top: 2rem;
+}
+
+.recent-sessions-section h3 {
+  color: white;
+  font-size: 1.2rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+}
+
+.recent-sessions-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.session-card {
+  background: rgba(102, 126, 234, 0.05);
+  border: 1px solid rgba(102, 126, 234, 0.2);
+  border-radius: 15px;
+  padding: 1.5rem;
+  transition: all 0.3s ease;
+}
+
+.session-card:hover {
+  background: rgba(102, 126, 234, 0.1);
+  border-color: rgba(102, 126, 234, 0.4);
+  transform: translateX(5px);
+}
+
+.session-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+}
+
+.session-number {
+  font-weight: 600;
+  color: white;
+  font-size: 1rem;
+}
+
+.session-status {
+  padding: 0.4rem 1rem;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.session-status.active {
+  background: rgba(67, 233, 123, 0.2);
+  color: #43e97b;
+  border: 1px solid rgba(67, 233, 123, 0.3);
+}
+
+.session-status.completed {
+  background: rgba(102, 126, 234, 0.2);
+  color: #667eea;
+  border: 1px solid rgba(102, 126, 234, 0.3);
+}
+
+.session-status.ended-early {
+  background: rgba(250, 112, 154, 0.2);
+  color: #fa709a;
+  border: 1px solid rgba(250, 112, 154, 0.3);
+}
+
+.session-time {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 1rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+}
+
+.session-date {
+  color: #a0a0a0;
+  font-size: 0.9rem;
+}
+
+.session-duration {
+  font-weight: 600;
+  color: white;
+}
+
+.actual-duration {
+  color: #667eea;
+  font-size: 1.1rem;
+}
+
+.planned-duration {
+  color: #a0a0a0;
+  font-size: 0.85rem;
+}
+
+.session-sites {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
+
+.sites-label {
+  color: #a0a0a0;
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.sites-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.site-badge {
+  padding: 0.4rem 0.9rem;
+  background: rgba(102, 126, 234, 0.2);
+  border: 1px solid rgba(102, 126, 234, 0.3);
+  border-radius: 15px;
+  color: white;
+  font-size: 0.85rem;
+  font-weight: 500;
+}

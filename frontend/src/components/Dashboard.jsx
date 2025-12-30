@@ -158,6 +158,48 @@ function Dashboard({ userId }) {
                   </div>
                 </div>
               )}
+
+              {/* Recent Focus Sessions */}
+              {focusStats.recentSessions && focusStats.recentSessions.length > 0 && (
+                <div className="recent-sessions-section">
+                  <h3>Recent Focus Sessions</h3>
+                  <div className="recent-sessions-list">
+                    {focusStats.recentSessions.map((session, index) => (
+                      <div key={session.id} className="session-card">
+                        <div className="session-header">
+                          <div className="session-number">Session #{focusStats.totalSessions - index}</div>
+                          <div className={`session-status ${session.isActive ? 'active' : session.wasCompleted ? 'completed' : 'ended-early'}`}>
+                            {session.isActive ? '🟢 Active' : session.wasCompleted ? '✅ Completed' : '⏹️ Ended Early'}
+                          </div>
+                        </div>
+                        <div className="session-time">
+                          <span className="session-date">
+                            {new Date(session.startTime).toLocaleDateString()} at {new Date(session.startTime).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                          </span>
+                          <span className="session-duration">
+                            {session.wasEndedEarly ? (
+                              <>
+                                <span className="actual-duration">{session.actualDuration} min</span>
+                                <span className="planned-duration"> / {session.plannedDuration} min planned</span>
+                              </>
+                            ) : (
+                              <span>{session.actualDuration} min</span>
+                            )}
+                          </span>
+                        </div>
+                        <div className="session-sites">
+                          <span className="sites-label">Blocked:</span>
+                          <div className="sites-tags">
+                            {session.blockedSites.map(site => (
+                              <span key={site} className="site-badge">{site}</span>
+                            ))}
+                          </div>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           )}
 

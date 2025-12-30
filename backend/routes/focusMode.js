@@ -154,12 +154,36 @@ router.get('/stats/:userId', async (req, res) => {
       .sort((a, b) => b.count - a.count)
       .slice(0, 5);
 
+    // Get latest 3 sessions with details
+    const recentSessions = allSessions
+      .sort((a, b) => new Date(b.startTime) - new Date(a.startTime))
+      .slice(0, 3)
+      .map(s => {
+        const endTime = new Date(s.endTime);
+        const actualEndTime = s.actualEndTime ? new Date(s.actualEndTime) : null;
+        const wasEndedEarly = actualEndTime && actualEndTime < endTime;
+
+        return {
+          id: s._id,
+          startTime: s.startTime,
+          endTime: s.endTime,
+          actualEndTime: s.actualEndTime,
+          plannedDuration: s.duration,
+          actualDuration: wasEndedEarly ? s.actualDuration : s.duration,
+          blockedSites: s.blockedDomains,
+          isActive: s.isActive,
+          wasCompleted: !s.isActive && !wasEndedEarly,
+          wasEndedEarly: wasEndedEarly
+        };
+      });
+
     res.json({
       totalSessions,
       completedSessions,
       activeSessions,
       totalMinutesFocused,
-      topBlockedSites
+      topBlockedSites,
+      recentSessions
     });
   } catch (error) {
     res.status(500).json({ error: error.message });
