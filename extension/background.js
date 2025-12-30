@@ -14,9 +14,34 @@ let pausedAt = null;
 let accumulatedTime = 0; // Track accumulated active time
 
 // ===============================
+// KEEP SERVICE WORKER ALIVE
+// ===============================
+// Keep service worker alive by setting up alarms
+chrome.alarms.create('keepAlive', { periodInMinutes: 0.5 });
+chrome.alarms.onAlarm.addListener((alarm) => {
+  if (alarm.name === 'keepAlive') {
+    console.log('Service worker keepalive ping');
+  }
+});
+
+// ===============================
 // USER ID INITIALIZATION
 // ===============================
+// Initialize on startup
+chrome.runtime.onStartup.addListener(() => {
+  console.log('Extension started');
+  initializeUserId();
+});
+
 chrome.runtime.onInstalled.addListener(() => {
+  console.log('Extension installed/updated');
+  initializeUserId();
+});
+
+// Initialize immediately
+initializeUserId();
+
+function initializeUserId() {
   chrome.storage.local.get(["userId"], (result) => {
     if (!result.userId) {
       userId = "user_" + Math.random().toString(36).substr(2, 9);
@@ -27,18 +52,7 @@ chrome.runtime.onInstalled.addListener(() => {
       console.log("Loaded existing user ID:", userId);
     }
   });
-});
-
-chrome.storage.local.get(["userId"], (result) => {
-  if (result.userId) {
-    userId = result.userId;
-    console.log("User ID loaded:", userId);
-  } else {
-    userId = "user_" + Math.random().toString(36).substr(2, 9);
-    chrome.storage.local.set({ userId });
-    console.log("Created user ID on startup:", userId);
-  }
-});
+}
 
 // ===============================
 // MESSAGE LISTENER (for pause/resume from content script)
@@ -76,13 +90,21 @@ function resumeTracking() {
 // TAB EVENTS
 // ===============================
 chrome.tabs.onActivated.addListener(async (activeInfo) => {
+  console.log('Tab activated:', activeInfo.tabId);
   await logCurrentTab();
   const tab = await chrome.tabs.get(activeInfo.tabId);
+
+  // Check for blocking immediately
+  if (tab.url && !isIgnorableUrl(tab.url)) {
+    await checkAndBlock(tab.id, tab.url);
+  }
+
   await startTracking(tab);
 });
 
 chrome.tabs.onUpdated.addListener(async (tabId, changeInfo, tab) => {
   if ((changeInfo.url || changeInfo.status === "complete") && tab.active) {
+    console.log('Tab updated:', tabId, changeInfo.url || changeInfo.status);
 
     if (changeInfo.url && !isIgnorableUrl(changeInfo.url)) {
       await checkAndBlock(tabId, changeInfo.url);
