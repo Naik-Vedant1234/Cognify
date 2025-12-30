@@ -2,8 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { MessageCircle, X, Send, Minimize2 } from 'lucide-react';
 import './FloatingChatbot.css';
-
-const API_URL = 'http://localhost:5000/api';
+import API_URL from '../config/api';
 
 function FloatingChatbot({ userId }) {
   const [isOpen, setIsOpen] = useState(false);

@@ -3,8 +3,8 @@ import axios from 'axios';
 import { BarChart, Bar, PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
 import { Clock, TrendingUp, Globe } from 'lucide-react';
 import './Dashboard.css';
+import API_URL from "../config/api";
 
-const API_URL = 'http://localhost:5000/api';
 const COLORS = ['#667eea', '#764ba2', '#f093fb', '#4facfe', '#43e97b', '#fa709a'];
 
 function Dashboard({ userId }) {

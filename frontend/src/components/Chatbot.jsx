@@ -2,8 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import axios from 'axios';
 import { Send, Bot, User } from 'lucide-react';
 import './Chatbot.css';
-
-const API_URL = 'http://localhost:5000/api';
+import API_URL from "../config/api";
 
 function Chatbot({ userId }) {
   const [messages, setMessages] = useState([
@@ -34,17 +33,17 @@ function Chatbot({ userId }) {
       if (res.data.success) {
         setMessages(prev => [...prev, { role: 'assistant', content: res.data.response }]);
       } else {
-        setMessages(prev => [...prev, { 
-          role: 'assistant', 
-          content: `Error: ${res.data.error || 'Failed to get response'}` 
+        setMessages(prev => [...prev, {
+          role: 'assistant',
+          content: `Error: ${res.data.error || 'Failed to get response'}`
         }]);
       }
     } catch (error) {
       console.error('Chat error:', error);
       const errorMsg = error.response?.data?.error || error.message || 'Connection error. Make sure the backend is running.';
-      setMessages(prev => [...prev, { 
-        role: 'assistant', 
-        content: `Sorry, I encountered an error: ${errorMsg}` 
+      setMessages(prev => [...prev, {
+        role: 'assistant',
+        content: `Sorry, I encountered an error: ${errorMsg}`
       }]);
     } finally {
       setLoading(false);

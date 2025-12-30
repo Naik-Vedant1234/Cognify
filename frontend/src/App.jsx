@@ -72,20 +72,22 @@ function App() {
 
 function BlockedPage() {
   const [timeRemaining, setTimeRemaining] = React.useState('');
+  import API_URL from './config/api';
+
   const [userId] = React.useState(() => localStorage.getItem('cognify_user_id'));
 
   React.useEffect(() => {
     const checkSession = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/focus/active/${userId}`);
+        const res = await fetch(`${API_URL}/focus/active/${userId}`);
         const data = await res.json();
-        
+
         if (data.active && data.session) {
           const endTime = new Date(data.session.endTime);
           const updateTimer = () => {
             const now = new Date();
             const diff = endTime - now;
-            
+
             if (diff <= 0) {
               setTimeRemaining('Session ended');
               window.location.reload();
@@ -95,7 +97,7 @@ function BlockedPage() {
               setTimeRemaining(`${minutes}m ${seconds}s remaining`);
             }
           };
-          
+
           updateTimer();
           const interval = setInterval(updateTimer, 1000);
           return () => clearInterval(interval);
@@ -104,7 +106,7 @@ function BlockedPage() {
         console.error('Error checking session:', error);
       }
     };
-    
+
     checkSession();
   }, [userId]);
 

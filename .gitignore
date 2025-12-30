@@ -1,9 +1,14 @@
 node_modules/
 .env
+.env.local
+.env.production
 dist/
 build/
 *.log
 .DS_Store
-backend/node_modules/
-frontend/node_modules/
-extension/node_modules/
+.vscode/
+.idea/
+
+# Keep example files
+!.env.example
+!.env.production.example

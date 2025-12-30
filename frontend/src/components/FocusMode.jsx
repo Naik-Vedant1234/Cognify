@@ -2,8 +2,7 @@ import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { Target, Plus, X } from 'lucide-react';
 import './FocusMode.css';
-
-const API_URL = 'http://localhost:5000/api';
+import API_URL from "../config/api";
 
 function FocusMode({ userId }) {
   const [duration, setDuration] = useState(25);

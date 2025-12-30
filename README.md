@@ -128,4 +128,33 @@ The dashboard will run on http://localhost:5173
 - **Focus mode not working**: Verify the extension has proper permissions
 - **Chatbot errors**: Check your Gemini API key in `.env`
 
+## Deployment
+
+Ready to deploy to production? **All localhost dependencies have been removed and the project is deployment-ready!**
+
+See our deployment guides:
+
+- **[QUICK_DEPLOY.md](QUICK_DEPLOY.md)** - Deploy in 30 minutes (recommended)
+- **[DEPLOY_CHECKLIST.md](DEPLOY_CHECKLIST.md)** - Step-by-step checklist
+- **[DEPLOYMENT.md](DEPLOYMENT.md)** - Complete deployment guide with all options
+- **[DEPLOYMENT_STATUS.md](DEPLOYMENT_STATUS.md)** - What was fixed and current status
+
+### Quick Deploy Summary
+
+1. **Database**: MongoDB Atlas (free tier)
+2. **Backend**: Render.com (free tier)
+3. **Frontend**: Vercel (free tier)
+4. **Extension**: Load locally or publish to Chrome Web Store
+
+Total cost: **$0/month** with free tiers!
+
+### Configuration Files
+
+After deployment, update these files with your URLs:
+- `extension/config.js` - Backend API URL
+- `frontend/.env.production` - Backend API URL
+- `extension/manifest.json` - Frontend URL
+- `extension/blocked.html` - Frontend URL
+- Backend environment variables on Render
+
 Enjoy using Cognify! 🚀
