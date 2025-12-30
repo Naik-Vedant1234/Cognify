@@ -5,7 +5,9 @@ const focusSessionSchema = new mongoose.Schema({
   blockedDomains: [{ type: String }],
   startTime: { type: Date, required: true },
   endTime: { type: Date, required: true },
-  duration: { type: Number, required: true },
+  actualEndTime: { type: Date }, // When user manually ended the session
+  duration: { type: Number, required: true }, // Planned duration in minutes
+  actualDuration: { type: Number }, // Actual duration in minutes (if ended early)
   isActive: { type: Boolean, default: true, index: true }
 });
 

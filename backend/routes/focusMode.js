@@ -51,11 +51,24 @@ router.get('/active/:userId', async (req, res) => {
 router.post('/end/:sessionId', async (req, res) => {
   try {
     const { sessionId } = req.params;
-    const session = await FocusSession.findByIdAndUpdate(
-      sessionId,
-      { isActive: false },
-      { new: true }
-    );
+    const now = new Date();
+
+    // Find the session
+    const session = await FocusSession.findById(sessionId);
+    if (!session) {
+      return res.status(404).json({ error: 'Session not found' });
+    }
+
+    // Calculate actual duration (in minutes)
+    const actualDurationMs = now - new Date(session.startTime);
+    const actualDurationMinutes = Math.floor(actualDurationMs / 60000);
+
+    // Update session
+    session.isActive = false;
+    session.actualEndTime = now;
+    session.actualDuration = actualDurationMinutes;
+    await session.save();
+
     res.json({ success: true, session });
   } catch (error) {
     res.status(500).json({ error: error.message });
@@ -110,12 +123,22 @@ router.get('/stats/:userId', async (req, res) => {
     const completedSessions = allSessions.filter(s => !s.isActive && new Date(s.endTime) <= now).length;
     const activeSessions = allSessions.filter(s => s.isActive && new Date(s.endTime) > now).length;
 
-    // Calculate total minutes focused (only completed sessions)
+    // Calculate total minutes focused (use actual duration if ended early)
     const totalMinutesFocused = allSessions.reduce((sum, s) => {
-      if (!s.isActive && new Date(s.endTime) <= now) {
+      if (s.isActive) return sum; // Don't count active sessions
+
+      // If session was ended early, use actualDuration
+      // If session completed naturally, use planned duration
+      const endTime = new Date(s.endTime);
+      const actualEndTime = s.actualEndTime ? new Date(s.actualEndTime) : null;
+
+      if (actualEndTime && actualEndTime < endTime) {
+        // Ended early - use actual duration
+        return sum + (s.actualDuration || 0);
+      } else {
+        // Completed naturally - use planned duration
         return sum + s.duration;
       }
-      return sum;
     }, 0);
 
     // Get most blocked domains
