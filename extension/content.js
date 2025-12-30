@@ -1,6 +1,8 @@
 let timerElement = null;
 let startTime = Date.now();
 let timerInterval = null;
+let isPaused = false;
+let pausedTime = 0;
 
 function createTimer() {
   // Don't show timer on blocked page or dashboard
@@ -26,10 +28,63 @@ function createTimer() {
   document.body.appendChild(timerElement);
 
   timerInterval = setInterval(updateTimer, 1000);
+
+  // Listen for visibility changes
+  setupVisibilityTracking();
+}
+
+function setupVisibilityTracking() {
+  // Handle page visibility changes
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      // Page is hidden - notify background to pause tracking
+      pauseTimer();
+      chrome.runtime.sendMessage({ action: 'pauseTracking' });
+    } else {
+      // Page is visible - notify background to resume tracking
+      resumeTimer();
+      chrome.runtime.sendMessage({ action: 'resumeTracking' });
+    }
+  });
+
+  // Handle window blur/focus (when switching to another app)
+  window.addEventListener('blur', () => {
+    pauseTimer();
+    chrome.runtime.sendMessage({ action: 'pauseTracking' });
+  });
+
+  window.addEventListener('focus', () => {
+    if (!document.hidden) {
+      resumeTimer();
+      chrome.runtime.sendMessage({ action: 'resumeTracking' });
+    }
+  });
+}
+
+function pauseTimer() {
+  if (!isPaused) {
+    isPaused = true;
+    pausedTime = Date.now();
+    if (timerElement) {
+      timerElement.style.opacity = '0.5';
+    }
+  }
+}
+
+function resumeTimer() {
+  if (isPaused) {
+    isPaused = false;
+    // Adjust startTime to account for paused duration
+    const pauseDuration = Date.now() - pausedTime;
+    startTime += pauseDuration;
+    if (timerElement) {
+      timerElement.style.opacity = '1';
+    }
+  }
 }
 
 function updateTimer() {
-  if (!timerElement) return;
+  if (!timerElement || isPaused) return;
 
   const elapsed = Math.floor((Date.now() - startTime) / 1000);
   const minutes = Math.floor(elapsed / 60);

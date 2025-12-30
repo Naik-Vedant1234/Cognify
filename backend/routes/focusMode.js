@@ -96,4 +96,51 @@ router.get('/check/:userId/:domain', async (req, res) => {
   }
 });
 
+// Get focus mode statistics
+router.get('/stats/:userId', async (req, res) => {
+  try {
+    const { userId } = req.params;
+    const now = new Date();
+
+    // Get all sessions for this user
+    const allSessions = await FocusSession.find({ userId });
+
+    // Calculate stats
+    const totalSessions = allSessions.length;
+    const completedSessions = allSessions.filter(s => !s.isActive && new Date(s.endTime) <= now).length;
+    const activeSessions = allSessions.filter(s => s.isActive && new Date(s.endTime) > now).length;
+
+    // Calculate total minutes focused (only completed sessions)
+    const totalMinutesFocused = allSessions.reduce((sum, s) => {
+      if (!s.isActive && new Date(s.endTime) <= now) {
+        return sum + s.duration;
+      }
+      return sum;
+    }, 0);
+
+    // Get most blocked domains
+    const domainCounts = {};
+    allSessions.forEach(session => {
+      session.blockedDomains.forEach(domain => {
+        domainCounts[domain] = (domainCounts[domain] || 0) + 1;
+      });
+    });
+
+    const topBlockedSites = Object.entries(domainCounts)
+      .map(([domain, count]) => ({ domain, count }))
+      .sort((a, b) => b.count - a.count)
+      .slice(0, 5);
+
+    res.json({
+      totalSessions,
+      completedSessions,
+      activeSessions,
+      totalMinutesFocused,
+      topBlockedSites
+    });
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 export default router;

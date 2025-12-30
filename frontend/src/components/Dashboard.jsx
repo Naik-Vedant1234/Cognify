@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { BarChart, Bar, PieChart, Pie, Cell, LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from 'recharts';
-import { Clock, TrendingUp, Globe } from 'lucide-react';
+import { Clock, TrendingUp, Globe, Target, Shield } from 'lucide-react';
 import './Dashboard.css';
 import API_URL from "../config/api";
 
@@ -14,6 +14,7 @@ function Dashboard({ userId }) {
   const [totalTime, setTotalTime] = useState(0);
   const [loading, setLoading] = useState(true);
   const [lastUpdate, setLastUpdate] = useState(new Date());
+  const [focusStats, setFocusStats] = useState(null);
 
   useEffect(() => {
     // Initial load with loading spinner
@@ -33,14 +34,16 @@ function Dashboard({ userId }) {
         setLoading(true);
       }
 
-      const [statsRes, timelineRes] = await Promise.all([
+      const [statsRes, timelineRes, focusRes] = await Promise.all([
         axios.get(`${API_URL}/tracking/stats/${userId}?period=${period}`),
-        axios.get(`${API_URL}/tracking/timeline/${userId}`)
+        axios.get(`${API_URL}/tracking/timeline/${userId}`),
+        axios.get(`${API_URL}/focus/stats/${userId}`)
       ]);
 
       setStats(statsRes.data.stats);
       setTotalTime(statsRes.data.totalTime);
       setTimeline(timelineRes.data.timeline);
+      setFocusStats(focusRes.data);
       setLastUpdate(new Date());
     } catch (error) {
       console.error('Error fetching data:', error);
@@ -106,6 +109,57 @@ function Dashboard({ userId }) {
               </div>
             </div>
           </div>
+
+          {/* Focus Mode Stats */}
+          {focusStats && focusStats.totalSessions > 0 && (
+            <div className="focus-stats-section">
+              <h2 className="section-title">
+                <Target size={24} />
+                Focus Mode Statistics
+              </h2>
+              <div className="focus-stats-grid">
+                <div className="focus-stat-card">
+                  <Target className="focus-stat-icon" />
+                  <div className="focus-stat-content">
+                    <h4>Total Sessions</h4>
+                    <p className="focus-stat-value">{focusStats.totalSessions}</p>
+                  </div>
+                </div>
+                <div className="focus-stat-card">
+                  <Shield className="focus-stat-icon" />
+                  <div className="focus-stat-content">
+                    <h4>Completed</h4>
+                    <p className="focus-stat-value">{focusStats.completedSessions}</p>
+                  </div>
+                </div>
+                <div className="focus-stat-card">
+                  <Clock className="focus-stat-icon" />
+                  <div className="focus-stat-content">
+                    <h4>Time Focused</h4>
+                    <p className="focus-stat-value">{formatTime(focusStats.totalMinutesFocused * 60)}</p>
+                  </div>
+                </div>
+              </div>
+
+              {/* Most Blocked Sites */}
+              {focusStats.topBlockedSites && focusStats.topBlockedSites.length > 0 && (
+                <div className="blocked-sites-section">
+                  <h3>Most Blocked Sites</h3>
+                  <div className="blocked-sites-list">
+                    {focusStats.topBlockedSites.map((site, index) => (
+                      <div key={site.domain} className="blocked-site-item">
+                        <div className="blocked-site-rank">#{index + 1}</div>
+                        <div className="blocked-site-info">
+                          <span className="blocked-site-domain">{site.domain}</span>
+                          <span className="blocked-site-count">{site.count} times blocked</span>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
 
           <div className="charts-grid">
             <div className="chart-card">

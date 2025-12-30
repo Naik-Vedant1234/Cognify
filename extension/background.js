@@ -9,6 +9,9 @@ import API_URL from './config.js';
 let activeTab = null;
 let startTime = null;
 let userId = null;
+let isTrackingPaused = false;
+let pausedAt = null;
+let accumulatedTime = 0; // Track accumulated active time
 
 // ===============================
 // USER ID INITIALIZATION
@@ -36,6 +39,38 @@ chrome.storage.local.get(["userId"], (result) => {
     console.log("Created user ID on startup:", userId);
   }
 });
+
+// ===============================
+// MESSAGE LISTENER (for pause/resume from content script)
+// ===============================
+chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.action === 'pauseTracking') {
+    pauseTracking();
+  } else if (message.action === 'resumeTracking') {
+    resumeTracking();
+  }
+});
+
+function pauseTracking() {
+  if (!isTrackingPaused && startTime) {
+    // Calculate time accumulated so far
+    const currentDuration = Math.floor((Date.now() - startTime) / 1000);
+    accumulatedTime += currentDuration;
+    isTrackingPaused = true;
+    pausedAt = Date.now();
+    console.log('Tracking paused. Accumulated time:', accumulatedTime);
+  }
+}
+
+function resumeTracking() {
+  if (isTrackingPaused) {
+    // Resume tracking - reset startTime to now
+    startTime = Date.now();
+    isTrackingPaused = false;
+    pausedAt = null;
+    console.log('Tracking resumed. Accumulated time:', accumulatedTime);
+  }
+}
 
 // ===============================
 // TAB EVENTS
@@ -97,6 +132,8 @@ async function startTracking(tab) {
     };
 
     startTime = Date.now();
+    accumulatedTime = 0; // Reset accumulated time for new tab
+    isTrackingPaused = false;
   } catch (err) {
     console.error("startTracking error:", err);
   }
@@ -105,7 +142,17 @@ async function startTracking(tab) {
 async function logCurrentTab() {
   if (!activeTab || !startTime || !userId) return;
 
-  const duration = Math.floor((Date.now() - startTime) / 1000);
+  // Calculate duration based on whether tracking is paused
+  let duration;
+  if (isTrackingPaused) {
+    // Use only accumulated time (don't count paused time)
+    duration = accumulatedTime;
+  } else {
+    // Add current session time to accumulated time
+    const currentSessionTime = Math.floor((Date.now() - startTime) / 1000);
+    duration = accumulatedTime + currentSessionTime;
+  }
+
   if (duration < 1) return;
 
   try {
@@ -118,11 +165,20 @@ async function logCurrentTab() {
         duration,
       }),
     });
+
+    console.log(`Logged ${duration}s for ${activeTab.domain}`);
   } catch (err) {
     console.error("logCurrentTab error:", err);
   }
 
-  startTime = Date.now();
+  // Reset tracking for next interval
+  if (!isTrackingPaused) {
+    startTime = Date.now();
+    accumulatedTime = 0;
+  } else {
+    // If paused, keep accumulated time but reset it after logging
+    accumulatedTime = 0;
+  }
 }
 
 // ===============================
