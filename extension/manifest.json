@@ -23,7 +23,7 @@
       "run_at": "document_idle"
     },
     {
-      "matches": ["http://localhost:5173/*"],
+      "matches": ["https://cognify-theta.vercel.app/*"],
       "js": ["inject-userid.js"],
       "run_at": "document_start"
     }

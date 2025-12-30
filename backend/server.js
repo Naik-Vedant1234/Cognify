@@ -15,16 +15,21 @@ if (!process.env.MONGO_URI) {
 
 const app = express();
 
+// CORS configuration - allow frontend and extension
 const allowedOrigins = [
-  "https://cognify.vercel.app",
-  "chrome-extension://YOUR_EXTENSION_ID"
+  "https://cognify-theta.vercel.app",
+  "chrome-extension://dofaahdpjponmcjfcjkkjemipgabfapi"
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
-    if (!origin || allowedOrigins.includes(origin)) {
+    // Allow requests with no origin (like mobile apps or curl requests)
+    if (!origin) return callback(null, true);
+
+    if (allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.log('Blocked by CORS:', origin);
       callback(new Error("Not allowed by CORS"));
     }
   },

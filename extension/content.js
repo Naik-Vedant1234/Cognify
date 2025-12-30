@@ -4,13 +4,13 @@ let timerInterval = null;
 
 function createTimer() {
   // Don't show timer on blocked page or dashboard
-  if (window.location.href.includes('blocked.html') || 
-      window.location.href.includes('localhost:5173')) {
+  if (window.location.href.includes('blocked.html') ||
+    window.location.href.includes('cognify-theta.vercel.app')) {
     return;
   }
-  
+
   if (timerElement) return;
-  
+
   timerElement = document.createElement('div');
   timerElement.id = 'cognify-timer';
   timerElement.innerHTML = `
@@ -22,19 +22,19 @@ function createTimer() {
       <span class="cognify-time">0:00</span>
     </div>
   `;
-  
+
   document.body.appendChild(timerElement);
-  
+
   timerInterval = setInterval(updateTimer, 1000);
 }
 
 function updateTimer() {
   if (!timerElement) return;
-  
+
   const elapsed = Math.floor((Date.now() - startTime) / 1000);
   const minutes = Math.floor(elapsed / 60);
   const seconds = elapsed % 60;
-  
+
   const timeSpan = timerElement.querySelector('.cognify-time');
   if (timeSpan) {
     timeSpan.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
