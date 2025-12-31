@@ -16,12 +16,33 @@ let accumulatedTime = 0; // Track accumulated active time
 // ===============================
 // KEEP SERVICE WORKER ALIVE
 // ===============================
-// Keep service worker alive by setting up alarms
-chrome.alarms.create('keepAlive', { periodInMinutes: 0.5 });
+// Keep service worker alive with multiple strategies
+chrome.alarms.create('keepAlive', { periodInMinutes: 0.25 }); // Every 15 seconds
 chrome.alarms.onAlarm.addListener((alarm) => {
   if (alarm.name === 'keepAlive') {
-    console.log('Service worker keepalive ping');
+    console.log('⏰ Service worker keepalive ping');
+    // Force a check on the active tab
+    chrome.tabs.query({ active: true, currentWindow: true }, (tabs) => {
+      if (tabs[0] && !isIgnorableUrl(tabs[0].url)) {
+        console.log('🔍 Keepalive checking active tab:', tabs[0].url);
+      }
+    });
   }
+});
+
+// Wake up on any tab activation
+chrome.tabs.onActivated.addListener(() => {
+  console.log('🔔 Service worker woken by tab activation');
+});
+
+// Wake up on any tab update
+chrome.tabs.onUpdated.addListener(() => {
+  console.log('🔔 Service worker woken by tab update');
+});
+
+// Wake up on window focus change
+chrome.windows.onFocusChanged.addListener(() => {
+  console.log('🔔 Service worker woken by window focus change');
 });
 
 // ===============================
@@ -29,27 +50,40 @@ chrome.alarms.onAlarm.addListener((alarm) => {
 // ===============================
 // Initialize on startup
 chrome.runtime.onStartup.addListener(() => {
-  console.log('Extension started');
+  console.log('🚀 Extension started');
   initializeUserId();
+  setupKeepalive();
 });
 
 chrome.runtime.onInstalled.addListener(() => {
-  console.log('Extension installed/updated');
+  console.log('📦 Extension installed/updated');
   initializeUserId();
+  setupKeepalive();
 });
 
 // Initialize immediately
 initializeUserId();
+setupKeepalive();
+
+function setupKeepalive() {
+  // Ensure alarm is set
+  chrome.alarms.get('keepAlive', (alarm) => {
+    if (!alarm) {
+      console.log('⚙️ Setting up keepalive alarm');
+      chrome.alarms.create('keepAlive', { periodInMinutes: 0.25 });
+    }
+  });
+}
 
 function initializeUserId() {
   chrome.storage.local.get(["userId"], (result) => {
     if (!result.userId) {
       userId = "user_" + Math.random().toString(36).substr(2, 9);
       chrome.storage.local.set({ userId });
-      console.log("Created new user ID:", userId);
+      console.log("✨ Created new user ID:", userId);
     } else {
       userId = result.userId;
-      console.log("Loaded existing user ID:", userId);
+      console.log("👤 Loaded existing user ID:", userId);
     }
   });
 }
