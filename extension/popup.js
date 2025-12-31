@@ -1,7 +1,7 @@
 // ===============================
 // CONFIG
 // ===============================
-import API_URL from './config.js';
+const API_URL = 'https://cognify-gxaa.onrender.com/api';
 
 // ===============================
 // LOAD STATS
