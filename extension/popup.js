@@ -4,30 +4,17 @@
 const API_URL = 'https://cognify-gxaa.onrender.com/api';
 
 // ===============================
-// CHECK AUTH
-// ===============================
-async function checkAuth() {
-  const { authToken } = await chrome.storage.local.get(['authToken']);
-
-  if (!authToken) {
-    window.location.href = 'auth.html';
-    return false;
-  }
-
-  return true;
-}
-
-// ===============================
 // LOAD STATS
 // ===============================
 async function loadStats() {
   try {
-    const { userId, userName } = await chrome.storage.local.get(['userId', 'userName']);
+    const { userId } = await chrome.storage.local.get(["userId"]);
     if (!userId) return;
 
-    // Display user greeting
-    if (userName) {
-      document.getElementById('userGreeting').textContent = `Hello, ${userName}!`;
+    // Display user ID
+    const userIdElement = document.getElementById("userId");
+    if (userIdElement) {
+      userIdElement.textContent = userId;
     }
 
     const response = await fetch(
@@ -71,17 +58,29 @@ async function loadStats() {
 }
 
 // ===============================
-// LOGOUT
+// COPY USER ID
 // ===============================
 document.addEventListener('DOMContentLoaded', () => {
-  const logoutBtn = document.getElementById('logoutBtn');
+  const copyBtn = document.getElementById('copyBtn');
 
-  logoutBtn.addEventListener('click', async () => {
-    if (confirm('Are you sure you want to logout?')) {
-      await chrome.storage.local.remove(['authToken', 'userId', 'userEmail', 'userName']);
-      window.location.href = 'auth.html';
-    }
-  });
+  if (copyBtn) {
+    copyBtn.addEventListener('click', async () => {
+      const userIdText = document.getElementById('userId').textContent;
+
+      try {
+        await navigator.clipboard.writeText(userIdText);
+        copyBtn.textContent = '✓ Copied';
+        copyBtn.classList.add('copied');
+
+        setTimeout(() => {
+          copyBtn.textContent = 'Copy';
+          copyBtn.classList.remove('copied');
+        }, 2000);
+      } catch (err) {
+        console.error('Failed to copy:', err);
+      }
+    });
+  }
 });
 
 // ===============================
@@ -100,8 +99,4 @@ function isIgnorableUrl(url) {
 // ===============================
 // INIT
 // ===============================
-checkAuth().then(isAuthenticated => {
-  if (isAuthenticated) {
-    loadStats();
-  }
-});
+loadStats();

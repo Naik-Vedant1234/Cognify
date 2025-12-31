@@ -121,7 +121,7 @@
 <body>
     <div class="header">
         <h1>Cognify</h1>
-        <p style="margin: 5px 0 0 0; opacity: 0.9;" id="userGreeting">Time Tracker</p>
+        <p style="margin: 5px 0 0 0; opacity: 0.9;">Time Tracker</p>
     </div>
     <div class="content">
         <div class="stat">
@@ -137,13 +137,17 @@
             <span class="stat-value" id="currentSite">-</span>
         </div>
 
+        <div class="user-id-section">
+            <div class="user-id-label">Your User ID (for syncing browsers)</div>
+            <div class="user-id-display">
+                <div class="user-id-text" id="userId">Loading...</div>
+                <button class="copy-btn" id="copyBtn">Copy</button>
+            </div>
+        </div>
+
         <a href="https://cognify-theta.vercel.app" target="_blank" class="btn">
             Open Dashboard
         </a>
-
-        <button class="btn" id="logoutBtn" style="background: #e74c3c; margin-top: 8px;">
-            Logout
-        </button>
     </div>
     <script src="popup.js"></script>
 </body>
