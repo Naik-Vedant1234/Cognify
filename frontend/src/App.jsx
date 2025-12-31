@@ -3,8 +3,10 @@ import { BrowserRouter, Routes, Route, Link, Navigate, useNavigate } from 'react
 import Dashboard from './components/Dashboard';
 import FocusMode from './components/FocusMode';
 import Login from './components/Login';
+import LandingPage from './components/LandingPage';
+import ExtensionDownload from './components/ExtensionDownload';
 import FloatingChatbot from './components/FloatingChatbot';
-import { Clock, Target, LogOut } from 'lucide-react';
+import { Clock, Target, LogOut, Download } from 'lucide-react';
 import API_URL from './config/api';
 import './App.css';
 
@@ -87,6 +89,10 @@ function App() {
                   <Target size={20} />
                   Focus Mode
                 </Link>
+                <Link to="/extension" className="nav-link">
+                  <Download size={20} />
+                  Get Extension
+                </Link>
                 <button onClick={handleLogout} className="nav-link logout-btn">
                   <LogOut size={20} />
                   Logout
@@ -98,6 +104,7 @@ function App() {
               <Routes>
                 <Route path="/" element={<Dashboard userId={user.userId} />} />
                 <Route path="/focus" element={<FocusMode userId={user.userId} />} />
+                <Route path="/extension" element={<ExtensionDownload />} />
                 <Route path="/blocked" element={<BlockedPage userId={user.userId} />} />
                 <Route path="/login" element={<Navigate to="/" />} />
               </Routes>
@@ -107,8 +114,10 @@ function App() {
           </>
         ) : (
           <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/extension" element={<ExtensionDownload />} />
             <Route path="/login" element={<Login onLogin={handleLogin} />} />
-            <Route path="*" element={<Navigate to="/login" />} />
+            <Route path="*" element={<Navigate to="/" />} />
           </Routes>
         )}
       </div>

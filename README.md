@@ -4,12 +4,17 @@ A comprehensive productivity platform combining a Chrome extension and web dashb
 
 ## Features
 
-- **Real-time Time Tracking**: Automatically tracks time spent on websites
+- **Real-time Time Tracking**: Automatically tracks time spent on websites (only active time)
 - **Interactive Dashboard**: Beautiful charts showing hourly, daily, monthly, and yearly analytics
-- **Focus Mode**: Block distracting websites for a set duration
+- **Focus Mode**: Block distracting websites for a set duration with smart recommendations
 - **Timer Overlay**: Dynamic clock icon on every website showing current session time
 - **AI Chatbot**: Gemini-powered assistant for time management advice
 - **Analytics**: Detailed breakdowns with graphs and statistics
+- **Landing Page**: Beautiful landing page explaining features and providing download
+- **Extension Download**: Easy manual installation with step-by-step guide
+- **Cross-Browser Support**: Works on Chrome, Brave, Edge, and all Chromium browsers
+- **Account System**: Secure authentication with JWT tokens
+- **Privacy First**: Your data is private and never sold to third parties
 
 ## Project Structure
 
@@ -85,11 +90,14 @@ The dashboard will run on http://localhost:5173
 
 ## Usage
 
-1. **Browse normally** - The extension automatically tracks your time
-2. **View the timer** - Look for the purple timer in the top-right of each page
-3. **Check your dashboard** - Visit http://localhost:5173 to see analytics
-4. **Enable Focus Mode** - Block distracting sites when you need to concentrate
-5. **Chat with AI** - Get productivity tips from the AI assistant
+1. **Visit the website** - Go to https://cognify-theta.vercel.app to learn about Cognify
+2. **Download extension** - Click "Download Extension" and follow installation steps
+3. **Create account** - Sign up for free to sync your data
+4. **Browse normally** - The extension automatically tracks your time
+5. **View the timer** - Look for the purple timer in the top-right of each page
+6. **Check your dashboard** - View detailed analytics and insights
+7. **Enable Focus Mode** - Block distracting sites when you need to concentrate
+8. **Chat with AI** - Get productivity tips from the AI assistant (if enabled)
 
 ## API Endpoints
 

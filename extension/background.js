@@ -61,6 +61,21 @@ chrome.runtime.onInstalled.addListener(() => {
   setupKeepalive();
 });
 
+// Listen for storage changes (when user ID is synced from dashboard)
+chrome.storage.onChanged.addListener((changes, namespace) => {
+  if (namespace === 'local' && changes.userId) {
+    const newUserId = changes.userId.newValue;
+    console.log('🔄 User ID changed to:', newUserId);
+    userId = newUserId;
+
+    // Reset tracking state when user ID changes
+    activeTab = null;
+    startTime = null;
+    accumulatedTime = 0;
+    isTrackingPaused = false;
+  }
+});
+
 // Initialize immediately
 initializeUserId();
 setupKeepalive();

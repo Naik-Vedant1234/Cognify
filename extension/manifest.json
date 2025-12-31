@@ -1,8 +1,9 @@
 {
   "manifest_version": 3,
-  "name": "Cognify - Time Tracker",
+  "name": "Cognify - Time Tracker & Focus Mode",
   "version": "1.0.0",
-  "description": "Track your browsing time and boost productivity",
+  "description": "Track your browsing time, boost productivity with focus mode, and block distracting websites. View detailed analytics on your personal dashboard.",
+  "author": "Cognify",
   "permissions": [
     "tabs",
     "storage",
@@ -29,7 +30,17 @@
     }
   ],
   "action": {
-    "default_popup": "popup.html"
+    "default_popup": "popup.html",
+    "default_icon": {
+      "16": "icons/icon16.png",
+      "48": "icons/icon48.png",
+      "128": "icons/icon128.png"
+    }
+  },
+  "icons": {
+    "16": "icons/icon16.png",
+    "48": "icons/icon48.png",
+    "128": "icons/icon128.png"
   },
   "web_accessible_resources": [
     {
