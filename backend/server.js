@@ -23,13 +23,18 @@ const app = express();
 // CORS configuration - allow frontend and extension
 const allowedOrigins = [
   "https://cognify-theta.vercel.app",
-  "chrome-extension://dofaahdpjponmcjfcjkkjemipgabfapi"
+  "chrome-extension://dofaahdpjponmcjfcjkkjemipgabfapi" // Your dev extension ID
 ];
 
 app.use(cors({
   origin: function (origin, callback) {
     // Allow requests with no origin (like mobile apps or curl requests)
     if (!origin) return callback(null, true);
+
+    // Allow all chrome-extension:// origins (for unpacked extensions)
+    if (origin && origin.startsWith('chrome-extension://')) {
+      return callback(null, true);
+    }
 
     if (allowedOrigins.includes(origin)) {
       callback(null, true);
