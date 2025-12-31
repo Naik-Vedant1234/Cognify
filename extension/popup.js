@@ -4,12 +4,31 @@
 const API_URL = 'https://cognify-gxaa.onrender.com/api';
 
 // ===============================
+// CHECK AUTH
+// ===============================
+async function checkAuth() {
+  const { authToken } = await chrome.storage.local.get(['authToken']);
+
+  if (!authToken) {
+    window.location.href = 'auth.html';
+    return false;
+  }
+
+  return true;
+}
+
+// ===============================
 // LOAD STATS
 // ===============================
 async function loadStats() {
   try {
-    const { userId } = await chrome.storage.local.get(["userId"]);
+    const { userId, userName } = await chrome.storage.local.get(['userId', 'userName']);
     if (!userId) return;
+
+    // Display user greeting
+    if (userName) {
+      document.getElementById('userGreeting').textContent = `Hello, ${userName}!`;
+    }
 
     const response = await fetch(
       `${API_URL}/tracking/stats/${userId}?period=day`
@@ -52,6 +71,20 @@ async function loadStats() {
 }
 
 // ===============================
+// LOGOUT
+// ===============================
+document.addEventListener('DOMContentLoaded', () => {
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  logoutBtn.addEventListener('click', async () => {
+    if (confirm('Are you sure you want to logout?')) {
+      await chrome.storage.local.remove(['authToken', 'userId', 'userEmail', 'userName']);
+      window.location.href = 'auth.html';
+    }
+  });
+});
+
+// ===============================
 // HELPERS
 // ===============================
 function isIgnorableUrl(url) {
@@ -67,4 +100,8 @@ function isIgnorableUrl(url) {
 // ===============================
 // INIT
 // ===============================
-loadStats();
+checkAuth().then(isAuthenticated => {
+  if (isAuthenticated) {
+    loadStats();
+  }
+});

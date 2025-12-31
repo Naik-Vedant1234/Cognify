@@ -6,11 +6,16 @@ import dotenv from 'dotenv';
 import timeTrackingRoutes from './routes/timeTracking.js';
 import focusModeRoutes from './routes/focusMode.js';
 import chatbotRoutes from './routes/chatbot-alternative.js';
+import authRoutes from './routes/auth.js';
 
 dotenv.config();
 
 if (!process.env.MONGO_URI) {
   throw new Error("MONGO_URI is not defined");
+}
+
+if (!process.env.JWT_SECRET) {
+  throw new Error("JWT_SECRET is not defined");
 }
 
 const app = express();
@@ -48,6 +53,7 @@ mongoose.connect(process.env.MONGO_URI, {
     process.exit(1);
   });
 
+app.use('/api/auth', authRoutes);
 app.use('/api/tracking', timeTrackingRoutes);
 app.use('/api/focus', focusModeRoutes);
 app.use('/api/chat', chatbotRoutes);

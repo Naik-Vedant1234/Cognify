@@ -74,6 +74,22 @@
   position: relative;
   overflow: hidden;
   border: 1px solid transparent;
+  background: transparent;
+  cursor: pointer;
+  font-size: 1rem;
+}
+
+.nav-link.logout-btn {
+  color: #ff6b6b;
+}
+
+.nav-link.logout-btn:hover {
+  border-color: rgba(255, 107, 107, 0.5);
+  box-shadow: 0 8px 20px rgba(255, 107, 107, 0.3);
+}
+
+.nav-link.logout-btn::before {
+  background: linear-gradient(135deg, #ff6b6b 0%, #ee5a6f 100%);
 }
 
 .nav-link::before {

@@ -1,79 +1,123 @@
 import React, { useState, useEffect } from 'react';
-import { BrowserRouter, Routes, Route, Link } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Link, Navigate, useNavigate } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
 import FocusMode from './components/FocusMode';
+import Login from './components/Login';
 import FloatingChatbot from './components/FloatingChatbot';
-import { Clock, Target } from 'lucide-react';
+import { Clock, Target, LogOut } from 'lucide-react';
 import API_URL from './config/api';
 import './App.css';
 
 function App() {
-  const [userId, setUserId] = useState(() => {
-    let id = localStorage.getItem('cognify_user_id');
-    if (!id) {
-      id = 'user_' + Math.random().toString(36).substr(2, 9);
-      localStorage.setItem('cognify_user_id', id);
-    }
-    console.log('Dashboard using user ID:', id);
-    return id;
-  });
+  const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true);
 
-  // Try to sync with extension on mount
   useEffect(() => {
-    if (window.chrome && chrome.runtime && chrome.runtime.id) {
-      // We're in a Chrome extension context, try to get the extension's user ID
+    checkAuth();
+  }, []);
+
+  const checkAuth = async () => {
+    const token = localStorage.getItem('cognify_auth_token');
+    const userId = localStorage.getItem('cognify_user_id');
+    const userName = localStorage.getItem('cognify_user_name');
+    const userEmail = localStorage.getItem('cognify_user_email');
+
+    if (token && userId) {
+      // Verify token with backend
       try {
-        chrome.storage.local.get(['userId'], (result) => {
-          if (result.userId && result.userId !== userId) {
-            console.log('Syncing with extension user ID:', result.userId);
-            localStorage.setItem('cognify_user_id', result.userId);
-            setUserId(result.userId);
+        const response = await fetch(`${API_URL}/auth/verify`, {
+          headers: {
+            'Authorization': `Bearer ${token}`
           }
         });
-      } catch (e) {
-        console.log('Not in extension context, using localStorage ID');
+
+        if (response.ok) {
+          setUser({ userId, userName, userEmail });
+        } else {
+          // Token invalid, clear storage
+          localStorage.removeItem('cognify_auth_token');
+          localStorage.removeItem('cognify_user_id');
+          localStorage.removeItem('cognify_user_name');
+          localStorage.removeItem('cognify_user_email');
+        }
+      } catch (error) {
+        console.error('Auth verification error:', error);
       }
     }
-  }, []);
+
+    setLoading(false);
+  };
+
+  const handleLogin = (userData) => {
+    setUser(userData);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('cognify_auth_token');
+    localStorage.removeItem('cognify_user_id');
+    localStorage.removeItem('cognify_user_name');
+    localStorage.removeItem('cognify_user_email');
+    setUser(null);
+  };
+
+  if (loading) {
+    return (
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <div>Loading...</div>
+      </div>
+    );
+  }
 
   return (
     <BrowserRouter>
       <div className="app">
-        <nav className="navbar">
-          <div className="nav-brand">
-            <Clock className="brand-icon" />
-            <h1>Cognify</h1>
-          </div>
-          <div className="nav-links">
-            <Link to="/" className="nav-link">
-              <Clock size={20} />
-              Dashboard
-            </Link>
-            <Link to="/focus" className="nav-link">
-              <Target size={20} />
-              Focus Mode
-            </Link>
-          </div>
-        </nav>
+        {user ? (
+          <>
+            <nav className="navbar">
+              <div className="nav-brand">
+                <Clock className="brand-icon" />
+                <h1>Cognify</h1>
+              </div>
+              <div className="nav-links">
+                <Link to="/" className="nav-link">
+                  <Clock size={20} />
+                  Dashboard
+                </Link>
+                <Link to="/focus" className="nav-link">
+                  <Target size={20} />
+                  Focus Mode
+                </Link>
+                <button onClick={handleLogout} className="nav-link logout-btn">
+                  <LogOut size={20} />
+                  Logout
+                </button>
+              </div>
+            </nav>
 
-        <main className="main-content">
+            <main className="main-content">
+              <Routes>
+                <Route path="/" element={<Dashboard userId={user.userId} />} />
+                <Route path="/focus" element={<FocusMode userId={user.userId} />} />
+                <Route path="/blocked" element={<BlockedPage userId={user.userId} />} />
+                <Route path="/login" element={<Navigate to="/" />} />
+              </Routes>
+            </main>
+
+            <FloatingChatbot userId={user.userId} />
+          </>
+        ) : (
           <Routes>
-            <Route path="/" element={<Dashboard userId={userId} />} />
-            <Route path="/focus" element={<FocusMode userId={userId} />} />
-            <Route path="/blocked" element={<BlockedPage />} />
+            <Route path="/login" element={<Login onLogin={handleLogin} />} />
+            <Route path="*" element={<Navigate to="/login" />} />
           </Routes>
-        </main>
-
-        {/* Floating Chatbot - Available on all pages */}
-        <FloatingChatbot userId={userId} />
+        )}
       </div>
     </BrowserRouter>
   );
 }
 
-function BlockedPage() {
+function BlockedPage({ userId }) {
   const [timeRemaining, setTimeRemaining] = React.useState('');
-  const [userId] = React.useState(() => localStorage.getItem('cognify_user_id'));
 
   React.useEffect(() => {
     const checkSession = async () => {

@@ -62,13 +62,66 @@
         .btn:hover {
             opacity: 0.9;
         }
+
+        .user-id-section {
+            margin-top: 16px;
+            padding: 12px;
+            background: #f5f5f5;
+            border-radius: 8px;
+        }
+
+        .user-id-label {
+            font-size: 11px;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .user-id-display {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .user-id-text {
+            flex: 1;
+            font-family: monospace;
+            font-size: 12px;
+            color: #333;
+            background: white;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ddd;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .copy-btn {
+            padding: 8px 12px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .copy-btn:hover {
+            background: #5568d3;
+        }
+
+        .copy-btn.copied {
+            background: #43e97b;
+        }
     </style>
 </head>
 
 <body>
     <div class="header">
         <h1>Cognify</h1>
-        <p style="margin: 5px 0 0 0; opacity: 0.9;">Time Tracker</p>
+        <p style="margin: 5px 0 0 0; opacity: 0.9;" id="userGreeting">Time Tracker</p>
     </div>
     <div class="content">
         <div class="stat">
@@ -83,9 +136,14 @@
             <span class="stat-label">Current Site</span>
             <span class="stat-value" id="currentSite">-</span>
         </div>
+
         <a href="https://cognify-theta.vercel.app" target="_blank" class="btn">
             Open Dashboard
         </a>
+
+        <button class="btn" id="logoutBtn" style="background: #e74c3c; margin-top: 8px;">
+            Logout
+        </button>
     </div>
     <script src="popup.js"></script>
 </body>
