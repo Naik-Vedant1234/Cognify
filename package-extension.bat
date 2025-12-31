@@ -19,6 +19,18 @@ if not exist "icons\icon16.png" (
     exit /b 1
 )
 
+if not exist "icons\icon48.png" (
+    echo ERROR: icons\icon48.png not found!
+    pause
+    exit /b 1
+)
+
+if not exist "icons\icon144.png" (
+    echo ERROR: icons\icon144.png not found!
+    pause
+    exit /b 1
+)
+
 echo.
 echo Creating extension package...
 echo.
@@ -34,11 +46,13 @@ if %ERRORLEVEL% EQU 0 (
     echo File created: cognify-extension.zip
     echo Location: %CD%\..\cognify-extension.zip
     echo.
+    echo Also copying to frontend/public for website download...
+    powershell -Command "Copy-Item ..\cognify-extension.zip ..\frontend\public\cognify-extension.zip -Force"
+    echo.
     echo Next steps:
-    echo 1. Create icons: icon48.png and icon128.png
-    echo 2. Go to: https://chrome.google.com/webstore/devconsole
-    echo 3. Upload cognify-extension.zip
-    echo 4. Follow CHROME_WEB_STORE_SUBMISSION.md guide
+    echo 1. Test the extension locally
+    echo 2. Deploy frontend to update website download
+    echo 3. Share the download link with users
     echo.
 ) else (
     echo.
