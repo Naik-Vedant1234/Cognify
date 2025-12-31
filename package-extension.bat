@@ -23,7 +23,7 @@ echo.
 echo Creating extension package...
 echo.
 
-powershell -Command "Compress-Archive -Path background.js,blocked.html,config.js,content.css,content.js,inject-userid.js,manifest.json,popup.html,popup.js,icons -DestinationPath ..\cognify-extension.zip -Force"
+powershell -Command "Compress-Archive -Path background.js,blocked.html,config.js,content.css,content.js,inject-userid.js,manifest.json,popup.html,popup.js,icons,INSTALLATION_GUIDE.txt -DestinationPath ..\cognify-extension.zip -Force"
 
 if %ERRORLEVEL% EQU 0 (
     echo.

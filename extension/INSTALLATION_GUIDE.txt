@@ -1,0 +1,58 @@
+COGNIFY EXTENSION - INSTALLATION GUIDE
+======================================
+
+Thank you for downloading Cognify!
+
+INSTALLATION STEPS:
+-------------------
+
+1. EXTRACT THIS ZIP FILE
+   - Right-click on cognify-extension.zip
+   - Select "Extract All..." or "Extract Here"
+   - A folder will be created with all the extension files
+
+2. OPEN CHROME EXTENSIONS PAGE
+   - Open Chrome (or Brave/Edge)
+   - Type: chrome://extensions
+   - Press Enter
+
+3. ENABLE DEVELOPER MODE
+   - Look for "Developer mode" toggle in top-right corner
+   - Turn it ON (should be blue/enabled)
+
+4. LOAD THE EXTENSION
+   - Click "Load unpacked" button
+   - Navigate to the EXTRACTED folder (the one with manifest.json)
+   - Select the folder and click "Select Folder"
+
+5. PIN THE EXTENSION (Optional)
+   - Click the puzzle icon in your browser toolbar
+   - Find "Cognify - Time Tracker & Focus Mode"
+   - Click the pin icon
+
+6. CREATE AN ACCOUNT
+   - Click the Cognify icon in your toolbar
+   - Click "Open Dashboard"
+   - Sign up for a free account
+   - The extension will automatically sync with your account
+
+IMPORTANT NOTES:
+----------------
+- Keep the extracted folder in a permanent location
+- Don't delete the folder after installation
+- The folder must contain manifest.json file
+- If you see nested folders, select the one with manifest.json
+
+TROUBLESHOOTING:
+----------------
+- Extension not showing? Make sure Developer Mode is enabled
+- Can't find Developer Mode? It's in the top-right of chrome://extensions
+- Extension disabled? Chrome may show warnings for unpacked extensions - just re-enable it
+- Not tracking time? Make sure you're logged in at cognify-theta.vercel.app
+
+SUPPORT:
+--------
+Visit: https://cognify-theta.vercel.app
+For detailed guide: https://cognify-theta.vercel.app/extension
+
+Enjoy tracking your time and boosting your productivity!
