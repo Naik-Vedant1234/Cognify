@@ -1,52 +1,52 @@
 # Extension Icons
 
-## Required Icons for Chrome Web Store
+## Current Icons
 
-You need these icon sizes:
+You have these icon sizes:
 - ✅ **icon16.png** - 16x16 pixels (exists)
-- ❌ **icon48.png** - 48x48 pixels (need to create)
-- ❌ **icon128.png** - 128x128 pixels (need to create)
+- ✅ **icon48.png** - 48x48 pixels (exists)
+- ✅ **icon144.png** - 144x144 pixels (exists)
 
-## How to Create Missing Icons
+All required icons are present! ✓
 
-### Option 1: Online Tool (Easiest)
-1. Go to https://www.favicon-generator.org/
-2. Upload `icon16.png`
-3. Generate larger sizes
-4. Download and rename to `icon48.png` and `icon128.png`
-5. Save them in this folder
+## Icon Sizes Explained
 
-### Option 2: Canva (Free)
-1. Go to https://www.canva.com/
-2. Create custom size: 128x128
-3. Design a simple clock/timer icon with purple gradient
-4. Download as PNG
-5. Resize to 48x48 for the smaller version
+- **16x16** - Used in the browser toolbar and extension menu
+- **48x48** - Used in the extensions management page
+- **144x144** - Used for high-DPI displays and Chrome Web Store listing
 
-### Option 3: Use ImageMagick (Command Line)
+## For Chrome Web Store Submission
+
+If you decide to publish to Chrome Web Store, you'll also need:
+- **128x128** - Required for Chrome Web Store (can resize icon144.png)
+
+### How to Create 128x128 from 144x144
+
+**Option 1: Online Tool**
+1. Go to https://www.resizepixel.com/
+2. Upload `icon144.png`
+3. Resize to 128x128
+4. Download and save as `icon128.png`
+
+**Option 2: ImageMagick**
 ```bash
-# Install ImageMagick first
-# Then run:
-magick icon16.png -resize 48x48 icon48.png
-magick icon16.png -resize 128x128 icon128.png
+magick icons/icon144.png -resize 128x128 icons/icon128.png
 ```
 
-### Option 4: Simple Upscale (Quick but lower quality)
-Just resize icon16.png to 48x48 and 128x128 using any image editor:
-- Windows: Paint, Paint 3D
-- Online: https://www.resizepixel.com/
+**Option 3: Any Image Editor**
+- Open icon144.png in Paint, GIMP, Photoshop, etc.
+- Resize to 128x128
+- Save as icon128.png
 
-## Icon Design Tips
+## Icon Design
 
-For best results, your icon should:
-- Be simple and recognizable
-- Use the Cognify brand colors (purple gradient: #667eea to #764ba2)
-- Represent time tracking (clock, timer, stopwatch)
-- Look good on both light and dark backgrounds
-- Have transparent background (PNG)
+Your current icons use the Cognify brand:
+- Purple gradient theme (#667eea to #764ba2)
+- Clock/timer symbol
+- Simple and recognizable design
+- Works on both light and dark backgrounds
 
-## Current Icon
-The existing icon16.png is a simple design. You can either:
-1. Upscale it for quick submission
-2. Create a better quality icon for professional look
+## No Action Needed
+
+Your extension is ready to use with the current icons (16, 48, 144). The manifest has been updated to use these sizes.
 
