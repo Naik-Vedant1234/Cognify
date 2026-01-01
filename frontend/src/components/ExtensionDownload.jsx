@@ -1,9 +1,18 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Download, Chrome, CheckCircle, AlertCircle } from 'lucide-react';
 import './ExtensionDownload.css';
 
 function ExtensionDownload() {
     const [step, setStep] = useState(0);
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
+    const navigate = useNavigate();
+
+    useEffect(() => {
+        // Check if user is logged in
+        const token = localStorage.getItem('cognify_auth_token');
+        setIsLoggedIn(!!token);
+    }, []);
 
     const steps = [
         {
@@ -27,6 +36,23 @@ function ExtensionDownload() {
             icon: <CheckCircle size={32} />
         }
     ];
+
+    const handleDownload = () => {
+        // Check if user is logged in
+        if (!isLoggedIn) {
+            alert('Please login or sign up to download the extension');
+            navigate('/login');
+            return;
+        }
+
+        // This will download the extension ZIP from the public folder
+        const link = document.createElement('a');
+        link.href = '/cognify-extension.zip';
+        link.download = 'cognify-extension.zip';
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+    };
 
     const handleDownload = () => {
         // This will download the extension ZIP from the public folder

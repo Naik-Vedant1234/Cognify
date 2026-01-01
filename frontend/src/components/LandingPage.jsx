@@ -1,12 +1,21 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Clock, Target, BarChart3, Download, Chrome, CheckCircle, Zap, Shield, TrendingUp } from 'lucide-react';
+import { Clock, Target, BarChart3, Download, Chrome, CheckCircle, Zap, Shield, TrendingUp, LogIn, UserPlus } from 'lucide-react';
 import './LandingPage.css';
 
 function LandingPage() {
     const navigate = useNavigate();
 
     const handleDownload = () => {
+        // Check if user is logged in
+        const token = localStorage.getItem('cognify_auth_token');
+        if (!token) {
+            alert('Please login or sign up to download the extension');
+            navigate('/login');
+            return;
+        }
+
+        // User is logged in, allow download
         const link = document.createElement('a');
         link.href = '/cognify-extension.zip';
         link.download = 'cognify-extension.zip';
@@ -17,6 +26,25 @@ function LandingPage() {
 
     return (
         <div className="landing-page">
+            {/* Navigation Bar */}
+            <nav className="landing-nav">
+                <div className="nav-container">
+                    <div className="nav-brand">
+                        <Clock size={28} />
+                        <span>Cognify</span>
+                    </div>
+                    <div className="nav-actions">
+                        <button className="nav-btn login-btn" onClick={() => navigate('/login')}>
+                            <LogIn size={18} />
+                            Login
+                        </button>
+                        <button className="nav-btn signup-btn" onClick={() => navigate('/login')}>
+                            <UserPlus size={18} />
+                            Sign Up
+                        </button>
+                    </div>
+                </div>
+            </nav>
             {/* Hero Section */}
             <section className="hero-section">
                 <div className="hero-content">
