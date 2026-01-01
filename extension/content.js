@@ -3,6 +3,8 @@ let startTime = Date.now();
 let timerInterval = null;
 let isPaused = false;
 let pausedTime = 0;
+let isDragging = false;
+let dragOffset = { x: 0, y: 0 };
 
 function createTimer() {
   // Don't show timer on blocked page or dashboard
@@ -25,12 +27,117 @@ function createTimer() {
     </div>
   `;
 
+  // Get saved position or use default
+  chrome.storage.local.get(['timerPosition'], (result) => {
+    if (result.timerPosition) {
+      timerElement.style.top = result.timerPosition.top;
+      timerElement.style.right = result.timerPosition.right;
+    }
+  });
+
   document.body.appendChild(timerElement);
+
+  // Make timer draggable
+  makeDraggable(timerElement);
 
   timerInterval = setInterval(updateTimer, 1000);
 
   // Listen for visibility changes
   setupVisibilityTracking();
+
+  // Listen for fullscreen changes
+  setupFullscreenTracking();
+}
+
+function makeDraggable(element) {
+  element.style.cursor = 'move';
+
+  element.addEventListener('mousedown', (e) => {
+    isDragging = true;
+    const rect = element.getBoundingClientRect();
+    dragOffset.x = e.clientX - rect.left;
+    dragOffset.y = e.clientY - rect.top;
+    element.style.transition = 'none';
+    e.preventDefault();
+  });
+
+  document.addEventListener('mousemove', (e) => {
+    if (!isDragging) return;
+
+    const x = e.clientX - dragOffset.x;
+    const y = e.clientY - dragOffset.y;
+
+    // Keep timer within viewport
+    const maxX = window.innerWidth - element.offsetWidth;
+    const maxY = window.innerHeight - element.offsetHeight;
+
+    const boundedX = Math.max(0, Math.min(x, maxX));
+    const boundedY = Math.max(0, Math.min(y, maxY));
+
+    element.style.left = boundedX + 'px';
+    element.style.top = boundedY + 'px';
+    element.style.right = 'auto';
+    element.style.bottom = 'auto';
+  });
+
+  document.addEventListener('mouseup', () => {
+    if (isDragging) {
+      isDragging = false;
+      element.style.transition = '';
+
+      // Save position
+      const position = {
+        top: element.style.top,
+        right: element.style.right,
+        left: element.style.left,
+        bottom: element.style.bottom
+      };
+      chrome.storage.local.set({ timerPosition: position });
+    }
+  });
+}
+
+function setupFullscreenTracking() {
+  // Hide timer in fullscreen mode
+  document.addEventListener('fullscreenchange', () => {
+    if (document.fullscreenElement) {
+      // Entered fullscreen - hide timer
+      if (timerElement) {
+        timerElement.style.display = 'none';
+      }
+    } else {
+      // Exited fullscreen - show timer
+      if (timerElement) {
+        timerElement.style.display = 'flex';
+      }
+    }
+  });
+
+  // Also handle webkit fullscreen (Safari)
+  document.addEventListener('webkitfullscreenchange', () => {
+    if (document.webkitFullscreenElement) {
+      if (timerElement) {
+        timerElement.style.display = 'none';
+      }
+    } else {
+      if (timerElement) {
+        timerElement.style.display = 'flex';
+      }
+    }
+  });
+
+  // Handle Mozilla fullscreen
+  document.addEventListener('mozfullscreenchange', () => {
+    if (document.mozFullScreenElement) {
+      if (timerElement) {
+        timerElement.style.display = 'none';
+      }
+    } else {
+      if (timerElement) {
+        timerElement.style.display = 'flex';
+      }
+    }
+  });
 }
 
 function setupVisibilityTracking() {
