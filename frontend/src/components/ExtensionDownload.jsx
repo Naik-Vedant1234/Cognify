@@ -54,16 +54,6 @@ function ExtensionDownload() {
         document.body.removeChild(link);
     };
 
-    const handleDownload = () => {
-        // This will download the extension ZIP from the public folder
-        const link = document.createElement('a');
-        link.href = '/cognify-extension.zip';
-        link.download = 'cognify-extension.zip';
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-    };
-
     return (
         <div className="extension-download-page">
             <div className="download-hero">
