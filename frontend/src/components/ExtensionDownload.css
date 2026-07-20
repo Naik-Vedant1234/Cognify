@@ -1,12 +1,12 @@
 .extension-download-page {
     min-height: 100vh;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--bg-primary);
 }
 
 .download-hero {
     padding: 80px 20px;
     text-align: center;
-    color: white;
+    color: var(--text-primary);
 }
 
 .hero-content {
@@ -16,7 +16,7 @@
 
 .hero-icon {
     margin-bottom: 20px;
-    filter: drop-shadow(0 4px 8px rgba(0,0,0,0.2));
+    filter: drop-shadow(0 4px 8px rgba(0,245,160,0.2));
 }
 
 .download-hero h1 {
@@ -29,6 +29,7 @@
     font-size: 20px;
     margin-bottom: 32px;
     opacity: 0.95;
+    color: var(--text-secondary);
 }
 
 .download-btn-large {
@@ -38,28 +39,29 @@
     padding: 16px 40px;
     font-size: 18px;
     font-weight: 600;
-    background: white;
-    color: #667eea;
+    background: var(--accent-gradient);
+    color: #050505;
     border: none;
     border-radius: 12px;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+    box-shadow: 0 4px 16px rgba(0,245,160,0.3);
 }
 
 .download-btn-large:hover {
     transform: translateY(-2px);
-    box-shadow: 0 6px 24px rgba(0,0,0,0.3);
+    box-shadow: 0 6px 24px rgba(0,245,160,0.5);
+    filter: brightness(1.1);
 }
 
 .download-note {
     margin-top: 16px;
     font-size: 14px;
-    opacity: 0.9;
+    color: var(--text-secondary);
 }
 
 .installation-guide {
-    background: white;
+    background: var(--bg-secondary);
     padding: 60px 20px;
 }
 
@@ -67,13 +69,13 @@
     text-align: center;
     font-size: 36px;
     margin-bottom: 16px;
-    color: #333;
+    color: var(--text-primary);
 }
 
 .guide-intro {
     text-align: center;
     font-size: 18px;
-    color: #666;
+    color: var(--text-secondary);
     margin-bottom: 48px;
 }
 
@@ -87,24 +89,26 @@
 }
 
 .step-card {
-    background: #f8f9fa;
+    background: var(--bg-glass);
     padding: 24px;
     border-radius: 12px;
     text-align: center;
     cursor: pointer;
     transition: all 0.3s ease;
-    border: 2px solid transparent;
+    border: 2px solid var(--glass-border);
     position: relative;
+    backdrop-filter: blur(20px);
 }
 
 .step-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.15);
+    box-shadow: 0 8px 24px rgba(0, 245, 160, 0.15);
+    border-color: rgba(0, 245, 160, 0.3);
 }
 
 .step-card.active {
-    border-color: #667eea;
-    background: linear-gradient(135deg, #667eea10, #764ba210);
+    border-color: var(--accent-color);
+    background: rgba(0, 245, 160, 0.05);
 }
 
 .step-number {
@@ -113,8 +117,8 @@
     right: 12px;
     width: 32px;
     height: 32px;
-    background: #667eea;
-    color: white;
+    background: var(--accent-gradient);
+    color: #050505;
     border-radius: 50%;
     display: flex;
     align-items: center;
@@ -124,19 +128,19 @@
 }
 
 .step-icon {
-    color: #667eea;
+    color: var(--accent-color);
     margin-bottom: 16px;
 }
 
 .step-card h3 {
     font-size: 18px;
     margin: 0 0 8px 0;
-    color: #333;
+    color: var(--text-primary);
 }
 
 .step-card p {
     font-size: 14px;
-    color: #666;
+    color: var(--text-secondary);
     margin: 0;
 }
 
@@ -144,15 +148,17 @@
     max-width: 800px;
     margin: 0 auto;
     padding: 32px;
-    background: #f8f9fa;
+    background: var(--bg-glass);
     border-radius: 12px;
-    border-left: 4px solid #667eea;
+    border-left: 4px solid var(--accent-color);
+    border: 1px solid var(--glass-border);
+    border-left: 4px solid var(--accent-color);
 }
 
 .instruction-content h3 {
     font-size: 24px;
     margin: 0 0 24px 0;
-    color: #333;
+    color: var(--text-primary);
 }
 
 .instruction-content ol {
@@ -164,23 +170,23 @@
     margin-bottom: 12px;
     font-size: 16px;
     line-height: 1.6;
-    color: #555;
+    color: var(--text-secondary);
 }
 
 .instruction-content code {
-    background: #e9ecef;
+    background: rgba(0, 245, 160, 0.1);
     padding: 2px 8px;
     border-radius: 4px;
     font-family: 'Courier New', monospace;
     font-size: 14px;
-    color: #667eea;
+    color: var(--accent-color);
 }
 
 .tip-box {
     display: flex;
     gap: 12px;
     padding: 16px;
-    background: #fff3cd;
+    background: rgba(255, 193, 7, 0.1);
     border-left: 4px solid #ffc107;
     border-radius: 8px;
     margin: 24px 0;
@@ -188,14 +194,14 @@
 
 .tip-box p {
     margin: 0;
-    color: #856404;
+    color: #ffc107;
 }
 
 .success-box {
     display: flex;
     gap: 16px;
     padding: 20px;
-    background: #d4edda;
+    background: rgba(40, 167, 69, 0.1);
     border-left: 4px solid #28a745;
     border-radius: 8px;
     margin: 24px 0;
@@ -203,18 +209,18 @@
 
 .success-box h4 {
     margin: 0 0 8px 0;
-    color: #155724;
+    color: #28a745;
 }
 
 .success-box p {
     margin: 0;
-    color: #155724;
+    color: #28a745;
 }
 
 .screenshot-placeholder {
     padding: 32px;
-    background: white;
-    border: 2px dashed #dee2e6;
+    background: var(--bg-primary);
+    border: 2px dashed var(--border-color);
     border-radius: 8px;
     text-align: center;
     margin: 24px 0;
@@ -222,14 +228,14 @@
 
 .screenshot-placeholder p {
     margin: 0;
-    color: #666;
+    color: var(--text-secondary);
     font-size: 16px;
 }
 
 .next-btn {
     padding: 12px 32px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    background: var(--accent-gradient);
+    color: #050505;
     border: none;
     border-radius: 8px;
     font-size: 16px;
@@ -240,11 +246,11 @@
 
 .next-btn:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+    box-shadow: 0 4px 12px rgba(0, 245, 160, 0.3);
 }
 
 .troubleshooting-section {
-    background: #f8f9fa;
+    background: var(--bg-primary);
     padding: 60px 20px;
 }
 
@@ -252,7 +258,7 @@
     text-align: center;
     font-size: 36px;
     margin-bottom: 48px;
-    color: #333;
+    color: var(--text-primary);
 }
 
 .faq-grid {
@@ -264,26 +270,28 @@
 }
 
 .faq-item {
-    background: white;
+    background: var(--bg-glass);
+    border: 1px solid var(--glass-border);
     padding: 24px;
     border-radius: 12px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    box-shadow: 0 2px 8px var(--shadow-color);
+    backdrop-filter: blur(20px);
 }
 
 .faq-item h4 {
     font-size: 18px;
     margin: 0 0 12px 0;
-    color: #667eea;
+    color: var(--accent-color);
 }
 
 .faq-item p {
     margin: 0;
-    color: #666;
+    color: var(--text-secondary);
     line-height: 1.6;
 }
 
 .features-section {
-    background: white;
+    background: var(--bg-secondary);
     padding: 60px 20px;
 }
 
@@ -291,7 +299,7 @@
     text-align: center;
     font-size: 36px;
     margin-bottom: 48px;
-    color: #333;
+    color: var(--text-primary);
 }
 
 .features-grid {
@@ -304,28 +312,28 @@
 
 .feature-card {
     padding: 24px;
-    background: linear-gradient(135deg, #667eea10, #764ba210);
+    background: rgba(0, 245, 160, 0.05);
     border-radius: 12px;
-    border: 1px solid #e9ecef;
+    border: 1px solid rgba(0, 245, 160, 0.2);
 }
 
 .feature-card h4 {
     font-size: 20px;
     margin: 0 0 12px 0;
-    color: #333;
+    color: var(--text-primary);
 }
 
 .feature-card p {
     margin: 0;
-    color: #666;
+    color: var(--text-secondary);
     line-height: 1.6;
 }
 
 .cta-section {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: var(--bg-primary);
     padding: 80px 20px;
     text-align: center;
-    color: white;
+    color: var(--text-primary);
 }
 
 .cta-section h2 {
@@ -336,10 +344,11 @@
 .cta-section p {
     margin-top: 24px;
     font-size: 16px;
+    color: var(--text-secondary);
 }
 
 .cta-section a {
-    color: white;
+    color: var(--accent-color);
     text-decoration: underline;
     font-weight: 600;
 }
