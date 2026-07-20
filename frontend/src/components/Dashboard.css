@@ -9,24 +9,22 @@
   align-items: center;
   margin-bottom: 2.5rem;
   padding: 2rem;
-  background: rgba(20, 20, 20, 0.6);
+  background: var(--bg-glass);
   border-radius: 20px;
-  border: 1px solid rgba(102, 126, 234, 0.2);
-  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .dashboard-header h2 {
   font-size: 2.5rem;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--text-primary);
   font-weight: 700;
   margin: 0;
 }
 
 .dashboard-header p {
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--text-secondary);
   font-size: 0.9rem;
   margin-top: 0.5rem;
 }
@@ -34,10 +32,10 @@
 .period-selector {
   display: flex;
   gap: 0.75rem;
-  background: rgba(30, 30, 30, 0.8);
+  background: var(--bg-secondary);
   padding: 0.5rem;
   border-radius: 15px;
-  border: 1px solid rgba(102, 126, 234, 0.2);
+  border: 1px solid var(--border-color);
 }
 
 .period-btn {
@@ -47,7 +45,7 @@
   border-radius: 10px;
   cursor: pointer;
   font-weight: 600;
-  color: #a0a0a0;
+  color: var(--text-secondary);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   position: relative;
   overflow: hidden;
@@ -60,26 +58,34 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--accent-gradient);
   opacity: 0;
   transition: opacity 0.3s ease;
   z-index: -1;
 }
 
 .period-btn:hover {
-  color: white;
+  color: var(--text-primary);
   transform: translateY(-2px);
 }
 
 .period-btn:hover::before {
-  opacity: 0.2;
+  opacity: 0.1;
 }
 
 .period-btn.active {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  background: var(--accent-gradient);
+  color: #050505;
+  box-shadow: 0 4px 15px rgba(0, 245, 160, 0.3);
   transform: scale(1.05);
+}
+
+.period-btn.active:hover {
+  color: #050505;
+}
+
+.period-btn.active::before {
+  display: none;
 }
 
 .stats-grid {
@@ -90,14 +96,15 @@
 }
 
 .stat-card {
-  background: rgba(20, 20, 20, 0.6);
+  background: var(--bg-glass);
   padding: 2rem;
   border-radius: 20px;
   display: flex;
   align-items: center;
   gap: 1.5rem;
-  border: 1px solid rgba(102, 126, 234, 0.2);
-  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   position: relative;
@@ -111,15 +118,15 @@
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, rgba(102, 126, 234, 0.1) 0%, rgba(118, 75, 162, 0.1) 100%);
+  background: linear-gradient(135deg, rgba(0, 245, 160, 0.05) 0%, rgba(0, 217, 245, 0.05) 100%);
   opacity: 0;
   transition: opacity 0.3s ease;
 }
 
 .stat-card:hover {
   transform: translateY(-5px);
-  border-color: rgba(102, 126, 234, 0.5);
-  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.3);
+  border-color: rgba(0, 245, 160, 0.5);
+  box-shadow: 0 10px 30px rgba(0, 245, 160, 0.15);
 }
 
 .stat-card:hover::before {
@@ -129,12 +136,12 @@
 .stat-icon {
   width: 60px;
   height: 60px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--accent-gradient);
   border-radius: 15px;
   display: flex;
   align-items: center;
   justify-content: center;
-  color: white;
+  color: #050505;
   transition: transform 0.3s ease;
 }
 
@@ -144,7 +151,7 @@
 
 .stat-content h3 {
   font-size: 0.9rem;
-  color: #a0a0a0;
+  color: var(--text-secondary);
   margin-bottom: 0.5rem;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -153,10 +160,7 @@
 .stat-value {
   font-size: 2.2rem;
   font-weight: bold;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--text-primary);
 }
 
 .charts-grid {
@@ -167,17 +171,18 @@
 }
 
 .chart-card {
-  background: rgba(20, 20, 20, 0.6);
+  background: var(--bg-glass);
   padding: 2rem;
   border-radius: 20px;
-  border: 1px solid rgba(102, 126, 234, 0.2);
-  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .chart-card:hover {
-  border-color: rgba(102, 126, 234, 0.5);
-  box-shadow: 0 10px 30px rgba(102, 126, 234, 0.2);
+  border-color: rgba(0, 245, 160, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 245, 160, 0.1);
   transform: translateY(-3px);
 }
 
@@ -187,22 +192,23 @@
 
 .chart-card h3 {
   margin-bottom: 1.5rem;
-  color: white;
+  color: var(--text-primary);
   font-size: 1.3rem;
   font-weight: 600;
 }
 
 .website-list {
-  background: rgba(20, 20, 20, 0.6);
+  background: var(--bg-glass);
   padding: 2rem;
   border-radius: 20px;
-  border: 1px solid rgba(102, 126, 234, 0.2);
-  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .website-list h3 {
   margin-bottom: 1.5rem;
-  color: white;
+  color: var(--text-primary);
   font-size: 1.3rem;
   font-weight: 600;
 }
@@ -212,16 +218,16 @@
   justify-content: space-between;
   align-items: center;
   padding: 1.25rem;
-  border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+  border-bottom: 1px solid var(--border-color);
   transition: all 0.3s ease;
   cursor: pointer;
   border-radius: 10px;
 }
 
 .website-item:hover {
-  background: rgba(102, 126, 234, 0.1);
+  background: rgba(0, 245, 160, 0.05);
   transform: translateX(5px);
-  border-bottom-color: rgba(102, 126, 234, 0.3);
+  border-bottom-color: rgba(0, 245, 160, 0.3);
 }
 
 .website-info {
@@ -238,7 +244,7 @@
 
 .domain {
   font-weight: 500;
-  color: white;
+  color: var(--text-primary);
 }
 
 .website-stats {
@@ -248,35 +254,32 @@
 }
 
 .visits {
-  color: #a0a0a0;
+  color: var(--text-secondary);
   font-size: 0.9rem;
 }
 
 .duration {
   font-weight: 600;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--accent-color);
   font-size: 1.1rem;
 }
 
 .loading {
   text-align: center;
   padding: 4rem;
-  color: white;
+  color: var(--text-primary);
   font-size: 1.2rem;
 }
 
 /* Chart customization for dark theme */
 .recharts-text {
-  fill: #a0a0a0 !important;
+  fill: var(--text-secondary) !important;
 }
 
 .recharts-cartesian-axis-line,
 .recharts-cartesian-grid-horizontal line,
 .recharts-cartesian-grid-vertical line {
-  stroke: rgba(102, 126, 234, 0.1) !important;
+  stroke: var(--border-color) !important;
 }
 
 .recharts-tooltip-wrapper {
@@ -284,28 +287,29 @@
 }
 
 .recharts-default-tooltip {
-  background: rgba(20, 20, 20, 0.95) !important;
-  border: 1px solid rgba(102, 126, 234, 0.3) !important;
+  background: var(--bg-glass) !important;
+  border: 1px solid var(--accent-color) !important;
   border-radius: 10px !important;
   backdrop-filter: blur(10px);
 }
 
 .recharts-tooltip-label {
-  color: white !important;
+  color: var(--text-primary) !important;
 }
 
 .recharts-tooltip-item {
-  color: #a0a0a0 !important;
+  color: var(--text-secondary) !important;
 }
 
 /* Focus Mode Stats Section */
 .focus-stats-section {
   margin-bottom: 2.5rem;
   padding: 2rem;
-  background: rgba(20, 20, 20, 0.6);
+  background: var(--bg-glass);
   border-radius: 20px;
-  border: 1px solid rgba(102, 126, 234, 0.2);
-  backdrop-filter: blur(10px);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 .section-title {
@@ -313,13 +317,13 @@
   align-items: center;
   gap: 0.75rem;
   font-size: 1.8rem;
-  color: white;
+  color: var(--text-primary);
   margin-bottom: 1.5rem;
   font-weight: 600;
 }
 
 .section-title svg {
-  color: #667eea;
+  color: var(--accent-color);
 }
 
 .focus-stats-grid {
@@ -330,10 +334,10 @@
 }
 
 .focus-stat-card {
-  background: rgba(102, 126, 234, 0.1);
+  background: rgba(0, 245, 160, 0.05);
   padding: 1.5rem;
   border-radius: 15px;
-  border: 1px solid rgba(102, 126, 234, 0.3);
+  border: 1px solid rgba(0, 245, 160, 0.2);
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -341,21 +345,21 @@
 }
 
 .focus-stat-card:hover {
-  background: rgba(102, 126, 234, 0.15);
+  background: rgba(0, 245, 160, 0.1);
   transform: translateY(-3px);
-  box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+  box-shadow: 0 5px 20px rgba(0, 245, 160, 0.15);
 }
 
 .focus-stat-icon {
   width: 48px;
   height: 48px;
-  color: #667eea;
+  color: var(--accent-color);
   flex-shrink: 0;
 }
 
 .focus-stat-content h4 {
   font-size: 0.85rem;
-  color: #a0a0a0;
+  color: var(--text-secondary);
   margin-bottom: 0.5rem;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -364,10 +368,7 @@
 .focus-stat-value {
   font-size: 2rem;
   font-weight: bold;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--text-primary);
   margin: 0;
 }
 
@@ -377,7 +378,7 @@
 }
 
 .blocked-sites-section h3 {
-  color: white;
+  color: var(--text-primary);
   font-size: 1.2rem;
   margin-bottom: 1rem;
   font-weight: 600;
@@ -394,28 +395,28 @@
   align-items: center;
   gap: 1rem;
   padding: 1rem 1.5rem;
-  background: rgba(102, 126, 234, 0.05);
-  border: 1px solid rgba(102, 126, 234, 0.2);
+  background: rgba(0, 245, 160, 0.03);
+  border: 1px solid var(--border-color);
   border-radius: 12px;
   transition: all 0.3s ease;
 }
 
 .blocked-site-item:hover {
-  background: rgba(102, 126, 234, 0.1);
+  background: rgba(0, 245, 160, 0.08);
   transform: translateX(5px);
-  border-color: rgba(102, 126, 234, 0.4);
+  border-color: rgba(0, 245, 160, 0.3);
 }
 
 .blocked-site-rank {
   width: 32px;
   height: 32px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: var(--accent-gradient);
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: bold;
-  color: white;
+  color: #050505;
   font-size: 0.9rem;
   flex-shrink: 0;
 }
@@ -428,13 +429,13 @@
 }
 
 .blocked-site-domain {
-  color: white;
+  color: var(--text-primary);
   font-weight: 600;
   font-size: 1rem;
 }
 
 .blocked-site-count {
-  color: #a0a0a0;
+  color: var(--text-secondary);
   font-size: 0.85rem;
 }
 
@@ -455,7 +456,7 @@
 }
 
 .recent-sessions-section h3 {
-  color: white;
+  color: var(--text-primary);
   font-size: 1.2rem;
   margin-bottom: 1rem;
   font-weight: 600;
@@ -468,16 +469,16 @@
 }
 
 .session-card {
-  background: rgba(102, 126, 234, 0.05);
-  border: 1px solid rgba(102, 126, 234, 0.2);
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
   border-radius: 15px;
   padding: 1.5rem;
   transition: all 0.3s ease;
 }
 
 .session-card:hover {
-  background: rgba(102, 126, 234, 0.1);
-  border-color: rgba(102, 126, 234, 0.4);
+  background: var(--bg-glass);
+  border-color: rgba(0, 245, 160, 0.3);
   transform: translateX(5px);
 }
 
@@ -490,7 +491,7 @@
 
 .session-number {
   font-weight: 600;
-  color: white;
+  color: var(--text-primary);
   font-size: 1rem;
 }
 
@@ -502,19 +503,19 @@
 }
 
 .session-status.active {
-  background: rgba(67, 233, 123, 0.2);
-  color: #43e97b;
-  border: 1px solid rgba(67, 233, 123, 0.3);
+  background: rgba(0, 245, 160, 0.15);
+  color: var(--accent-color);
+  border: 1px solid rgba(0, 245, 160, 0.3);
 }
 
 .session-status.completed {
-  background: rgba(102, 126, 234, 0.2);
-  color: #667eea;
-  border: 1px solid rgba(102, 126, 234, 0.3);
+  background: rgba(100, 100, 100, 0.15);
+  color: var(--text-secondary);
+  border: 1px solid var(--border-color);
 }
 
 .session-status.ended-early {
-  background: rgba(250, 112, 154, 0.2);
+  background: rgba(250, 112, 154, 0.15);
   color: #fa709a;
   border: 1px solid rgba(250, 112, 154, 0.3);
 }
@@ -525,26 +526,26 @@
   align-items: center;
   margin-bottom: 1rem;
   padding-bottom: 1rem;
-  border-bottom: 1px solid rgba(102, 126, 234, 0.1);
+  border-bottom: 1px solid var(--border-color);
 }
 
 .session-date {
-  color: #a0a0a0;
+  color: var(--text-secondary);
   font-size: 0.9rem;
 }
 
 .session-duration {
   font-weight: 600;
-  color: white;
+  color: var(--text-primary);
 }
 
 .actual-duration {
-  color: #667eea;
+  color: var(--accent-color);
   font-size: 1.1rem;
 }
 
 .planned-duration {
-  color: #a0a0a0;
+  color: var(--text-secondary);
   font-size: 0.85rem;
 }
 
@@ -555,7 +556,7 @@
 }
 
 .sites-label {
-  color: #a0a0a0;
+  color: var(--text-secondary);
   font-size: 0.85rem;
   text-transform: uppercase;
   letter-spacing: 1px;
@@ -569,10 +570,10 @@
 
 .site-badge {
   padding: 0.4rem 0.9rem;
-  background: rgba(102, 126, 234, 0.2);
-  border: 1px solid rgba(102, 126, 234, 0.3);
+  background: rgba(0, 245, 160, 0.05);
+  border: 1px solid var(--border-color);
   border-radius: 15px;
-  color: white;
+  color: var(--text-primary);
   font-size: 0.85rem;
   font-weight: 500;
 }
