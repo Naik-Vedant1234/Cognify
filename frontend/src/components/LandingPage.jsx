@@ -1,9 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Clock, Target, BarChart3, Download, Chrome, CheckCircle, Zap, Shield, TrendingUp, LogIn, UserPlus } from 'lucide-react';
+import { Clock, Target, BarChart3, Download, Chrome, CheckCircle, Zap, Shield, TrendingUp, LogIn, UserPlus, Sun, Moon } from 'lucide-react';
 import './LandingPage.css';
 
-function LandingPage() {
+function LandingPage({ isDarkMode, toggleTheme }) {
     const navigate = useNavigate();
 
     const handleDownload = () => {
@@ -34,6 +34,11 @@ function LandingPage() {
                         <span>Cognify</span>
                     </div>
                     <div className="nav-actions">
+                        {toggleTheme && (
+                            <button onClick={toggleTheme} className="theme-toggle-btn" title="Toggle Theme" style={{ border: 'none', background: 'transparent', cursor: 'pointer', color: 'var(--text-primary)', marginRight: '8px' }}>
+                                {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+                            </button>
+                        )}
                         <button className="nav-btn login-btn" onClick={() => navigate('/login')}>
                             <LogIn size={18} />
                             Login

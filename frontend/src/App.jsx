@@ -6,17 +6,37 @@ import Login from './components/Login';
 import LandingPage from './components/LandingPage';
 import ExtensionDownload from './components/ExtensionDownload';
 import FloatingChatbot from './components/FloatingChatbot';
-import { Clock, Target, LogOut, Download } from 'lucide-react';
+import { Clock, Target, LogOut, Download, Sun, Moon } from 'lucide-react';
 import API_URL from './config/api';
 import './App.css';
 
 function App() {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
+  
+  // Theme state
+  const [isDarkMode, setIsDarkMode] = useState(() => {
+    const savedTheme = localStorage.getItem('cognify_theme');
+    return savedTheme ? savedTheme === 'dark' : true; // Default to dark
+  });
 
   useEffect(() => {
     checkAuth();
   }, []);
+
+  useEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.setAttribute('data-theme', 'dark');
+      localStorage.setItem('cognify_theme', 'dark');
+    } else {
+      document.documentElement.removeAttribute('data-theme');
+      localStorage.setItem('cognify_theme', 'light');
+    }
+  }, [isDarkMode]);
+
+  const toggleTheme = () => {
+    setIsDarkMode(!isDarkMode);
+  };
 
   const checkAuth = async () => {
     const token = localStorage.getItem('cognify_auth_token');
@@ -25,7 +45,6 @@ function App() {
     const userEmail = localStorage.getItem('cognify_user_email');
 
     if (token && userId) {
-      // Verify token with backend
       try {
         const response = await fetch(`${API_URL}/auth/verify`, {
           headers: {
@@ -36,7 +55,6 @@ function App() {
         if (response.ok) {
           setUser({ userId, userName, userEmail });
         } else {
-          // Token invalid, clear storage
           localStorage.removeItem('cognify_auth_token');
           localStorage.removeItem('cognify_user_id');
           localStorage.removeItem('cognify_user_name');
@@ -64,7 +82,7 @@ function App() {
 
   if (loading) {
     return (
-      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh', background: 'var(--bg-primary)', color: 'var(--text-primary)' }}>
         <div>Loading...</div>
       </div>
     );
@@ -93,6 +111,9 @@ function App() {
                   <Download size={20} />
                   Get Extension
                 </Link>
+                <button onClick={toggleTheme} className="theme-toggle-btn" title="Toggle Theme">
+                  {isDarkMode ? <Sun size={20} /> : <Moon size={20} />}
+                </button>
                 <button onClick={handleLogout} className="nav-link logout-btn">
                   <LogOut size={20} />
                   Logout
@@ -114,7 +135,7 @@ function App() {
           </>
         ) : (
           <Routes>
-            <Route path="/" element={<LandingPage />} />
+            <Route path="/" element={<LandingPage isDarkMode={isDarkMode} toggleTheme={toggleTheme} />} />
             <Route path="/extension" element={<ExtensionDownload />} />
             <Route path="/login" element={<Login onLogin={handleLogin} />} />
             <Route path="*" element={<Navigate to="/" />} />
@@ -168,7 +189,7 @@ function BlockedPage({ userId }) {
         <Target size={80} className="blocked-icon" />
         <h1>🔒 Focus Mode Active</h1>
         <p>This website is currently blocked. Stay focused on your goals!</p>
-        {timeRemaining && <p style={{ fontSize: '1.2rem', fontWeight: 'bold', color: '#667eea', marginTop: '1rem' }}>{timeRemaining}</p>}
+        {timeRemaining && <p style={{ fontSize: '1.2rem', fontWeight: 'bold', color: 'var(--accent-color)', marginTop: '1rem' }}>{timeRemaining}</p>}
         <Link to="/" className="btn-primary" style={{ marginTop: '2rem' }}>Go to Dashboard</Link>
       </div>
     </div>
