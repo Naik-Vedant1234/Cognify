@@ -4,7 +4,7 @@
 const API_URL = 'https://cognify-gxaa.onrender.com/api';
 
 // ===============================
-// LOAD STATS
+// LOAD STATS & FOCUS
 // ===============================
 async function loadStats() {
   try {
@@ -17,43 +17,82 @@ async function loadStats() {
       userIdElement.textContent = userId;
     }
 
-    const response = await fetch(
-      `${API_URL}/tracking/stats/${userId}?period=day`
-    );
-
-    if (!response.ok) {
-      throw new Error(`API error: ${response.status}`);
+    // 1. Fetch Focus Mode Active Session
+    try {
+      const focusRes = await fetch(`${API_URL}/focus/active/${userId}`);
+      if (focusRes.ok) {
+        const focusData = await focusRes.json();
+        if (focusData.active && focusData.session) {
+          const focusActiveBlock = document.getElementById('focusActive');
+          const focusTimer = document.getElementById('focusTimer');
+          
+          if (focusActiveBlock && focusTimer) {
+            focusActiveBlock.classList.remove('hidden');
+            
+            const endTime = new Date(focusData.session.endTime).getTime();
+            
+            const updateTimer = () => {
+              const now = new Date().getTime();
+              const diff = endTime - now;
+              
+              if (diff <= 0) {
+                focusTimer.textContent = '00:00';
+                focusActiveBlock.classList.add('hidden');
+                return;
+              }
+              
+              const minutes = Math.floor(diff / 60000);
+              const seconds = Math.floor((diff % 60000) / 1000);
+              focusTimer.textContent = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            };
+            
+            updateTimer();
+            setInterval(updateTimer, 1000);
+          }
+        }
+      }
+    } catch (focusError) {
+      console.error("Error fetching focus mode:", focusError);
     }
 
+    // 2. Fetch Daily Tracking Stats
+    const response = await fetch(`${API_URL}/tracking/stats/${userId}?period=day`);
+    if (!response.ok) throw new Error(`API error: ${response.status}`);
     const data = await response.json();
 
     // Total time
     const totalSeconds = data.totalTime || 0;
     const totalMinutes = Math.floor(totalSeconds / 60);
 
-    document.getElementById("todayTime").textContent =
-      totalMinutes >= 60
+    const todayTimeElement = document.getElementById("todayTime");
+    if (todayTimeElement) {
+      todayTimeElement.textContent = totalMinutes >= 60
         ? `${Math.floor(totalMinutes / 60)}h ${totalMinutes % 60}m`
         : `${totalMinutes}m`;
+    }
 
     // Sites count
-    document.getElementById("sitesCount").textContent =
-      Array.isArray(data.stats) ? data.stats.length : 0;
+    const sitesCountElement = document.getElementById("sitesCount");
+    if (sitesCountElement) {
+      sitesCountElement.textContent = Array.isArray(data.stats) ? data.stats.length : 0;
+    }
 
     // Current site
-    const [tab] = await chrome.tabs.query({
-      active: true,
-      currentWindow: true,
-    });
-
-    if (tab?.url && !isIgnorableUrl(tab.url)) {
-      document.getElementById("currentSite").textContent =
-        new URL(tab.url).hostname;
-    } else {
-      document.getElementById("currentSite").textContent = "—";
+    const currentSiteElement = document.getElementById("currentSite");
+    if (currentSiteElement) {
+      const [tab] = await chrome.tabs.query({ active: true, currentWindow: true });
+      if (tab?.url && !isIgnorableUrl(tab.url)) {
+        currentSiteElement.textContent = new URL(tab.url).hostname;
+      } else {
+        currentSiteElement.textContent = "—";
+      }
     }
   } catch (error) {
     console.error("Popup load error:", error);
+    const todayTimeElement = document.getElementById("todayTime");
+    if (todayTimeElement && todayTimeElement.textContent === "Loading...") {
+      todayTimeElement.textContent = "0m";
+    }
   }
 }
 
