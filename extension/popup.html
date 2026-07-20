@@ -3,150 +3,210 @@
 
 <head>
     <meta charset="UTF-8">
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             width: 320px;
-            padding: 0;
-            margin: 0;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: #050505;
+            color: #ffffff;
+            font-family: 'Outfit', sans-serif;
+            overflow: hidden;
         }
 
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            padding: 20px;
-            text-align: center;
+            padding: 24px 20px 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            background: rgba(10, 10, 10, 0.8);
+            backdrop-filter: blur(10px);
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #00F5A0 0%, #00D9F5 100%);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 15px rgba(0, 217, 245, 0.3);
+        }
+        
+        .logo-icon svg {
+            width: 18px;
+            height: 18px;
+            stroke: #000;
+            stroke-width: 2.5;
+            fill: none;
         }
 
         .header h1 {
-            margin: 0;
-            font-size: 24px;
+            font-size: 20px;
+            font-weight: 600;
+            letter-spacing: -0.5px;
         }
 
         .content {
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
-        .stat {
+        .stat-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 16px;
+            padding: 16px;
             display: flex;
-            justify-content: space-between;
-            padding: 12px 0;
-            border-bottom: 1px solid #eee;
+            flex-direction: column;
+            gap: 8px;
+            transition: all 0.3s ease;
+        }
+        
+        .stat-card:hover {
+            border-color: rgba(0, 217, 245, 0.2);
+            background: rgba(255, 255, 255, 0.05);
         }
 
         .stat-label {
-            color: #666;
+            color: #888;
+            font-size: 13px;
             font-weight: 500;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
 
         .stat-value {
-            color: #667eea;
-            font-weight: 600;
+            font-size: 24px;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 0%, #aaa 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .stat-value.highlight {
+            background: linear-gradient(135deg, #00F5A0 0%, #00D9F5 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .site-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-top: 8px;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            margin-top: 4px;
+        }
+
+        .site-info .stat-label {
+            font-size: 11px;
+        }
+
+        .site-info .stat-value {
+            font-size: 13px;
+            font-weight: 500;
+            color: #e0e0e0;
+            -webkit-text-fill-color: initial;
+            background: none;
+            max-width: 150px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            text-align: right;
         }
 
         .btn {
             width: 100%;
-            padding: 12px;
-            margin-top: 16px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border: none;
-            border-radius: 8px;
-            font-weight: 600;
+            padding: 14px;
+            margin-top: 8px;
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            font-weight: 500;
+            font-size: 14px;
             cursor: pointer;
             text-decoration: none;
-            display: block;
-            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            font-family: inherit;
         }
 
         .btn:hover {
-            opacity: 0.9;
+            background: rgba(0, 217, 245, 0.1);
+            border-color: rgba(0, 217, 245, 0.3);
+            color: #00D9F5;
+            transform: translateY(-2px);
+        }
+        
+        .btn svg {
+            width: 16px;
+            height: 16px;
+            stroke: currentColor;
+            stroke-width: 2;
+            fill: none;
+            transition: transform 0.3s ease;
+        }
+        
+        .btn:hover svg {
+            transform: translateX(3px);
         }
 
-        .user-id-section {
-            margin-top: 16px;
-            padding: 12px;
-            background: #f5f5f5;
-            border-radius: 8px;
-        }
-
-        .user-id-label {
-            font-size: 11px;
-            color: #666;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 6px;
-        }
-
-        .user-id-display {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .user-id-text {
-            flex: 1;
-            font-family: monospace;
-            font-size: 12px;
-            color: #333;
-            background: white;
-            padding: 8px;
-            border-radius: 4px;
-            border: 1px solid #ddd;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .copy-btn {
-            padding: 8px 12px;
-            background: #667eea;
-            color: white;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            font-size: 11px;
-            font-weight: 600;
-        }
-
-        .copy-btn:hover {
-            background: #5568d3;
-        }
-
-        .copy-btn.copied {
-            background: #43e97b;
+        .hidden {
+            display: none !important;
         }
     </style>
 </head>
 
 <body>
     <div class="header">
+        <div class="logo-icon">
+            <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="12" r="10"></circle>
+                <polyline points="12 6 12 12 16 14"></polyline>
+            </svg>
+        </div>
         <h1>Cognify</h1>
-        <p style="margin: 5px 0 0 0; opacity: 0.9;">Time Tracker</p>
     </div>
     <div class="content">
-        <div class="stat">
-            <span class="stat-label">Today's Time</span>
-            <span class="stat-value" id="todayTime">Loading...</span>
-        </div>
-        <div class="stat">
-            <span class="stat-label">Sites Visited</span>
-            <span class="stat-value" id="sitesCount">Loading...</span>
-        </div>
-        <div class="stat">
-            <span class="stat-label">Current Site</span>
-            <span class="stat-value" id="currentSite">-</span>
+        <div class="stat-card">
+            <span class="stat-label">Time Focused</span>
+            <span class="stat-value highlight" id="todayTime">Loading...</span>
+            <div class="site-info">
+                <span class="stat-label">Sites Visited</span>
+                <span class="stat-value" id="sitesCount">-</span>
+            </div>
+            <div class="site-info">
+                <span class="stat-label">Current Site</span>
+                <span class="stat-value" id="currentSite">-</span>
+            </div>
         </div>
 
-        <div class="user-id-section">
-            <div class="user-id-label">Your User ID (for syncing browsers)</div>
-            <div class="user-id-display">
-                <div class="user-id-text" id="userId">Loading...</div>
-                <button class="copy-btn" id="copyBtn">Copy</button>
-            </div>
+        <!-- Hidden User ID section to not break existing JS if it expects the element -->
+        <div class="hidden">
+            <div id="userId"></div>
+            <button id="copyBtn"></button>
         </div>
 
         <a href="https://cognify-theta.vercel.app" target="_blank" class="btn">
             Open Dashboard
+            <svg viewBox="0 0 24 24">
+                <path d="M5 12h14"></path>
+                <path d="M12 5l7 7-7 7"></path>
+            </svg>
         </a>
     </div>
     <script src="popup.js"></script>
